@@ -1,6 +1,15 @@
+/**
+ * models/Animal.js - Mongoose schema for the animal collection
+ * Defines the structure and validation rules for animal records from the shelter
+ * database.
+ * Maps directly to the MongoDB collection used by the original Python dashboard.
+ * Uses strict: false to accommodate flexible fields from the legacy data source.
+ */
+
 const mongoose = require('mongoose');
 
 const animalSchema = new mongoose.Schema({
+  // animal_id not required or unique because some records may have missing IDs
   animal_id:                 { type: String },
   animal_type:               { type: String, required: true },
   breed:                     { type: String, required: true },
@@ -26,6 +35,14 @@ const animalSchema = new mongoose.Schema({
 });
 
 // [TO-DO] Compound index - Category Two enhancement
+
+/**
+ * Compound index for optimizing rescue type filter queries.
+ * Covers the most common filter combinations used in
+ * water, mountain, and disaster rescue queries.
+ * Fields ordered by selectivity: type > breed > sex > age
+ */
+
 animalSchema.index({
   animal_type:               1,
   breed:                     1,

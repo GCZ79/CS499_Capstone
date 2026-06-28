@@ -1,3 +1,10 @@
+/**
+ * chart.ts - Chart component for visualizing breed distribution data
+ * Standalone Angular component that renders a pie chart using Chart.js.
+ * Displays breed frequency data from the animal shelter with dynamic updates.
+ * Automatically handles chart lifecycle (creation, updates, destruction).
+ */
+
 import {
   Component,
   Input,
@@ -12,7 +19,7 @@ import { Chart, ArcElement, Tooltip, Legend, PieController } from 'chart.js';
 import { BreedCount } from '../../services/animal';
 import { CommonModule } from '@angular/common';
 
-// Register only the Chart.js modules we need
+// Register only the Chart.js modules we need for a pie chart
 // This keeps the bundle size small
 Chart.register(ArcElement, Tooltip, Legend, PieController);
 
@@ -31,14 +38,17 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   // The rescue type label for the chart title
   @Input() rescueType: string = 'reset';
 
+  // Reference to the canvas element where the chart will be rendered
   @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
 
   private chart: Chart | null = null;
 
+  // Lifecycle hook called after the component's view has been initialized
   ngAfterViewInit(): void {
     this.buildChart();
   }
 
+  // Lifecycle hook called when input properties change
   ngOnChanges(changes: SimpleChanges): void {
     if (this.breedData.length === 0) {
       if (this.chart) {
@@ -55,12 +65,14 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
   }
 
+  // Lifecycle hook called when the component is destroyed
   ngOnDestroy(): void {
     if (this.chart) {
       this.chart.destroy();
     }
   }
 
+  // Generates a dynamic title for the chart based on the selected rescue type
   public getTitle(): string {
     if (this.rescueType === 'reset' || !this.rescueType) {
       return 'Select a rescue type to see breed distribution';
@@ -70,9 +82,10 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
       mountain: 'Mountain or Wilderness Rescue',
       disaster: 'Disaster or Individual Tracking'
     };
-    return `Breed Distribution — ${labels[this.rescueType] || this.rescueType}`;
+    return `Breed Distribution - ${labels[this.rescueType] || this.rescueType}`;
   }
 
+  // Generates a set of distinct colors for the pie chart slices
   private generateColors(count: number): string[] {
     // Generate distinct colors for each breed slice
     const palette = [
@@ -87,6 +100,7 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
     return colors;
   }
 
+  // Builds the initial pie chart using the breed data
   private buildChart(): void {
     if (!this.chartCanvas) return;
 
@@ -126,6 +140,7 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
     });
   }
 
+  // Updates the existing chart with new breed data and refreshes the display
   private updateChart(): void {
     if (!this.chart) return;
 

@@ -1,11 +1,16 @@
+/**
+ * app.js — Express entry point
+ * Initializes middleware, security controls, and API routes.
+ */
+
 require('dotenv').config();   // load .env variables first, before anything else
 
-const express      = require('express');
-const cors         = require('cors');
-const helmet       = require('helmet');
-const rateLimit    = require('express-rate-limit');
-const connectDB    = require('./config/db');
-const animalsRoute = require('./routes/animals');
+const express           = require('express');
+const cors              = require('cors');
+const helmet            = require('helmet');
+const rateLimit         = require('express-rate-limit');
+const connectDB         = require('./config/db');
+const animalsRoute      = require('./routes/animals');
 const { validateQuery } = require('./middleware/validate');
 
 const app = express();
@@ -24,8 +29,8 @@ app.use(express.json());
 
 // Rate limit all /api routes
 app.use('/api/', rateLimit({
-  windowMs: 15 * 60 * 1000,  // 15 minutes
-  max: 100,                   // max 100 requests per window per IP
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,                 // max 100 requests per window per IP
   message: { error: 'Too many requests, please slow down' }
 }));
 
