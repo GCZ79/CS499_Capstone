@@ -1,0 +1,20 @@
+# Node
+node_modules/
+npm-debug.log
+
+# Environment files — never commit credentials
+server/.env
+
+# Angular build output
+client/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dataset files
+*.csv
+aac_export.json
+
+# Visual Studio
+.vs/
