@@ -1,0 +1,7 @@
+<div class="chart-wrapper">
+  <h3 class="chart-title">{{ getTitle() }}</h3>
+  <div *ngIf="breedData.length === 0" class="chart-empty">
+    Select a rescue filter to see breed distribution.
+  </div>
+  <canvas *ngIf="breedData.length > 0" #chartCanvas></canvas>
+</div>

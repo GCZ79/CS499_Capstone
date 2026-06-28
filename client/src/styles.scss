@@ -1,0 +1,16 @@
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+  --max-width: 1500px;
+  --gutter: 20px;
+}
+
+/* shared page grid */
+.page-grid {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, var(--max-width)) 1fr;
+}
+
+.content {
+  grid-column: 2;
+}

@@ -1,0 +1,117 @@
+<div class="dashboard">
+
+  <hr>
+
+  <!-- State debug info (development)
+  <pre>
+    loading: {{ loading }}
+    animals: {{ animals.length }}
+    total: {{ total }}
+    error: {{ error }}
+  </pre>
+  -->
+  <!-- Filter buttons - btn1/btn2/btn3/btn4 -->
+  <div class="filter-bar">
+    <span class="filter-label">Rescue type:</span>
+    <button *ngFor="let r of rescueTypes"
+            (click)="selectRescueType(r.id)"
+            [class]="'btn btn-' + r.id"
+            [class.active]="rescueType === r.id">
+      {{ r.label }}
+    </button>
+  </div>
+
+  <hr>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="status-message">
+    Loading...
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Results summary -->
+  <div *ngIf="!loading && !error" class="results-summary">
+    Showing {{ animals.length }} of {{ total }} animals
+  </div>
+
+  <!-- Data table -->
+  <div *ngIf="!loading && (animals.length || 0) > 0" class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th *ngFor="let col of visibleColumns">{{ col.label }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of animals"
+            (click)="selectAnimal(a)"
+            [class.selected]="selectedAnimal?._id === a._id"
+            style="cursor: pointer;">
+          <td *ngFor="let col of visibleColumns">
+            {{ a[col.key] || '-' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- No results -->
+  <div *ngIf="!loading && !error && (animals.length || 0) === 0" class="status-message">
+    No animals match this filter.
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && (total || 0) > pageSize" class="pagination">
+    <button (click)="changePage(currentPage - 1)"
+            [disabled]="currentPage === 0">
+      Previous
+    </button>
+
+    <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+
+    <button (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage + 1 >= totalPages">
+      Next
+    </button>
+  </div>
+
+  <hr>
+
+  <!-- Map and Chart -->
+  <details class="map-chart-details">
+    <summary>🗺️ Map & Chart</summary>
+    <div class="map-chart-row">
+      <div class="map-col">
+        <app-map [animals]="animals"
+                 [selectedAnimal]="selectedAnimal">
+        </app-map>
+      </div>
+      <div class="chart-col">
+        <app-chart [breedData]="breedData"
+                   [rescueType]="rescueType">
+        </app-chart>
+      </div>
+    </div>
+  </details>
+
+  <hr>
+
+  <!-- Column Visibility -->
+  <details class="col-visibility">
+    <summary>📦 Column Visibility</summary>
+    <div class="col-checklist">
+      <label *ngFor="let col of allColumns">
+        <input type="checkbox"
+               [checked]="isVisible(col.key)"
+               (change)="toggleColumn(col.key)">
+        {{ col.label }}
+      </label>
+      <p class="col-hint">Check to show, uncheck to hide.</p>
+    </div>
+  </details>
+
+</div>

@@ -1,0 +1,80 @@
+<section class="hero page-grid">
+  <div class="content hero-overlay">
+    <div class="hero-text">
+      <h1>SAVING LIVES.<br>TOGETHER.</h1>
+
+      <p>
+        We rescue, train, and deploy exceptional dogs<br>
+        for water, disaster, and mountain missions.
+      </p>
+
+    </div>
+  </div>
+</section>
+
+<div class="wave-divider"></div>
+
+<section class="mission-programs page-grid">
+  <div class="content mission-layout">
+    <div class="mission" routerLink="/about">
+
+      <h2>Our Mission</h2>
+
+      <p>
+        Grazioso Salvare is dedicated to rescuing dogs
+        in need and transforming them into highly skilled
+        search and rescue partners.
+      </p>
+
+      <p>
+        Through expert training and unwavering care,
+        we prepare our dogs to save lives in some of
+        the world's most challenging environments.
+      </p>
+
+    </div>
+
+    <div class="training">
+
+      <h2>Our Training Programs</h2>
+
+      <div class="cards">
+
+        <div class="card water"
+             [routerLink]="['/training']"
+             fragment="water">
+          <h3>Water Rescue</h3>
+
+          <p>
+            Training for swift water, floods,<br />
+            and aquatic search operations.
+          </p>
+        </div>
+
+        <div class="card disaster"
+             [routerLink]="['/training']"
+             fragment="disaster">
+          <h3>Disaster Response</h3>
+
+          <p>
+            Preparing for earthquakes,<br />
+            collapsed structures,<br />
+            and disaster zones.
+          </p>
+        </div>
+
+        <div class="card mountain"
+             [routerLink]="['/training']"
+             fragment="mountain">
+          <h3>Mountain Rescue</h3>
+
+          <p>
+            Training for rugged terrain,<br />
+            avalanche searches,<br />
+            and high-angle rescues.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

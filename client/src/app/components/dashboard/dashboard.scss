@@ -1,0 +1,203 @@
+.dashboard {
+  font-family: Arial, sans-serif;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0rem;
+}
+
+.header h1 {
+  font-size: 1.6rem;
+  color: #c9134b;
+  margin: 0;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0rem;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+}
+
+button {
+  padding: 2px 4px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+
+  &.active {
+    font-weight: bold;
+    border-color: #c9134b;
+    border-width: 3px;
+  }
+}
+
+.btn-water {
+  background-color: #ADD8E6;
+  height: 38px;
+}
+
+.btn-mountain {
+  background-color: #90EE90;
+  width: 100px;
+  height: 38px;
+  white-space: normal;
+  text-align: center;
+}
+
+.btn-disaster {
+  background-color: #F08080;
+  width: 130px;
+  height: 38px;
+  white-space: normal;
+  text-align: center;
+}
+
+.btn-reset {
+  background-color: #FFFFFF;
+  height: 38px;
+}
+
+hr {
+  border: none;
+  height: 2px;
+  background-color: #c9134b;
+  margin: 0.2rem 0;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.8rem;
+  }
+
+  th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+
+  tr:hover {
+    background-color: #f9f9f9;
+  }
+}
+
+tr.selected {
+  background-color: #fff3cd;
+}
+
+.pagination {
+  display: flex;
+  font-size: 0.8rem;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0.5rem;
+
+  button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.results-summary {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.status-message {
+  padding: 1rem;
+  color: #666;
+}
+
+.error-message {
+  padding: 1rem;
+  color: red;
+}
+
+.map-chart-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.map-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.chart-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.map-chart-details {
+  margin: 0.5rem 0;
+
+  summary {
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0.25rem 0;
+    user-select: none;
+    font-size: 0.85rem;
+  }
+}
+
+.col-visibility {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+
+  summary {
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0.25rem 0;
+    user-select: none;
+  }
+}
+
+.col-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  padding: 0.5rem 0;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+  }
+}
+
+.col-hint {
+  width: 100%;
+  font-size: 0.75rem;
+  color: #999;
+  margin: 0.25rem 0 0 0;
+}
