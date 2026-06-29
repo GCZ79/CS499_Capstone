@@ -10,7 +10,7 @@
     error: {{ error }}
   </pre>
   -->
-  <!-- Filter buttons - btn1/btn2/btn3/btn4 -->
+  <!-- Filter buttons - mirrors btn1/btn2/btn3/btn4 from python script -->
   <div class="filter-bar">
     <span class="filter-label">Rescue type:</span>
     <button *ngFor="let r of rescueTypes"
@@ -23,7 +23,7 @@
 
   <hr>
 
-  <!-- Loading state -->
+  <!-- Loading state - displayed when data is being fetched -->
   <div *ngIf="loading" class="status-message">
     Loading...
   </div>
@@ -33,14 +33,18 @@
     {{ error }}
   </div>
 
-  <!-- Results summary -->
+  <!-- Results summary - shows count of displayed vs total animals -->
   <div *ngIf="!loading && !error" class="results-summary">
     Showing {{ animals.length }} of {{ total }} animals
   </div>
 
-  <!-- Data table -->
+  <!--
+    Data table - displays animal records in a scrollable wrapper
+    Only shown when data is loaded and there are animals to display
+    Rows are clickable to select an animal for map/chart updates
+  -->
   <div *ngIf="!loading && (animals.length || 0) > 0" class="table-wrapper">
-    <table>
+    <table aria-label="Animal records table">
       <thead>
         <tr>
           <th *ngFor="let col of visibleColumns">{{ col.label }}</th>
@@ -64,8 +68,15 @@
     No animals match this filter.
   </div>
 
-  <!-- Pagination -->
-  <div *ngIf="!loading && (total || 0) > pageSize" class="pagination">
+  <!--
+    Pagination controls - only shown when there are more records than pageSize
+    Previous button disabled on first page
+    Next button disabled on last page
+    Shows current page and total pages
+  -->
+  <div *ngIf="!loading && (total || 0) > pageSize"
+       class="pagination"
+       aria-label="Pagination controls">
     <button (click)="changePage(currentPage - 1)"
             [disabled]="currentPage === 0">
       Previous
@@ -81,9 +92,15 @@
 
   <hr>
 
-  <!-- Map and Chart -->
+  <!--
+    Map & Chart section - collapsed by default
+    Uses HTML5 details/summary for expandable content
+    Shows map and chart side by side when expanded
+  -->
   <details class="map-chart-details">
-    <summary>🗺️ Map & Chart</summary>
+    <summary aria-label="Map and Chart section">
+    🗺️ Map & Chart
+    </summary>
     <div class="map-chart-row">
       <div class="map-col">
         <app-map [animals]="animals"
@@ -100,9 +117,15 @@
 
   <hr>
 
-  <!-- Column Visibility -->
+  <!--
+    Column Visibility - collapsed by default
+    Allows users to toggle which columns appear in the table
+    Changes persist via component state
+  -->
   <details class="col-visibility">
-    <summary>📦 Column Visibility</summary>
+    <summary aria-label="Column Visibility section">
+    📦 Column Visibility
+    </summary>
     <div class="col-checklist">
       <label *ngFor="let col of allColumns">
         <input type="checkbox"

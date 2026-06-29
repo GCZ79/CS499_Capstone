@@ -1,3 +1,10 @@
+/**
+ * map.ts - Map component for visualizing animal locations
+ * Standalone Angular component that renders an interactive Leaflet map.
+ * Displays animal locations as markers with tooltips and popups.
+ * Highlights the selected animal with a red marker.
+ */
+
 import {
   Component,
   Input,
@@ -11,6 +18,7 @@ import {
 import * as L from 'leaflet';
 import { Animal } from '../../services/animal';
 
+// Define default and selected marker icons
 const iconDefault = L.icon({
   iconUrl: 'assets/leaflet/marker-icon.png',
   iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
@@ -21,6 +29,7 @@ const iconDefault = L.icon({
   shadowSize: [41, 41]
 });
 
+// Define a red marker icon for the selected animal
 const iconSelected = L.icon({
   iconUrl: 'assets/leaflet/marker-icon-red.png',
   iconRetinaUrl: 'assets/leaflet/marker-icon-2x-red.png',
@@ -46,9 +55,13 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   // The currently selected animal - its marker turns red
   @Input() selectedAnimal: Animal | null = null;
 
+  // Reference to the map container div in the template
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
+  // Leaflet map instance
   private map!: L.Map;
+
+  // Array to keep track of current markers on the map
   private markers: L.Marker[] = [];
 
   // Default center: Austin, TX - same as your original dashboard
@@ -61,6 +74,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       this.defaultCenter,
       this.defaultZoom
     );
+    // Handle map resize when container changes
+    setTimeout(() => this.map.invalidateSize(), 100);
 
     // Add OpenStreetMap tiles - same tile source as dash_leaflet default
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -92,16 +107,20 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.markers.forEach(m => m.remove());
     this.markers = [];
 
+    // Filter out animals without valid location data
     const validAnimals = this.animals.filter(
-      a => a.location_lat && a.location_long
+      a => a.location_lat && a.location_long &&
+      a.location_lat >= -90 && a.location_lat <= 90 &&
+      a.location_long >= -180 && a.location_long <= 180
     );
-
+    // If no valid animals, do nothing
     if (validAnimals.length === 0) return;
 
+    // Add new markers for each valid animal
     validAnimals.forEach(animal => {
       const isSelected = this.selectedAnimal?._id === animal._id;
       const icon = isSelected ? iconSelected : iconDefault;
-
+      // Create a marker at the animal's location with the appropriate icon
       const marker = L.marker(
         [animal.location_lat, animal.location_long],
         { icon }
@@ -117,7 +136,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         Age: ${animal.age_upon_outcome || 'Unknown'}<br>
         Sex: ${animal.sex_upon_outcome || 'Unknown'}
       `);
-
+      // Add the marker to the map and keep track of it
       marker.addTo(this.map);
       this.markers.push(marker);
 

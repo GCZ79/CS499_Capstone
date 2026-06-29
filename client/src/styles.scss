@@ -1,3 +1,10 @@
+/**
+ * styles.scss - Global application styles
+ * Defines shared CSS variables, utility classes, and global styling.
+ * Imports third-party library styles (Leaflet maps).
+ * Provides a consistent grid system and spacing throughout the application.
+ */
+
 @import 'leaflet/dist/leaflet.css';
 
 :root {

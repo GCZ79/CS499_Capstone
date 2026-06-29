@@ -1,3 +1,11 @@
+/**
+ * dashboard.ts - Dashboard component for animal data visualization
+ * Main container component that orchestrates the animal data dashboard.
+ * Handles data fetching, state management, and coordinates child components
+ * (table, map, chart).
+ * Mirrors the Python dashboard's functionality with Angular patterns.
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnimalService, Animal, AnimalResponse, BreedCount } from '../../services/animal';
@@ -51,9 +59,8 @@ export class DashboardComponent implements OnInit {
     { key: 'location_long', label: 'Long' }
   ];
 
-  // Columns hidden by default — mirrors HIDDEN_COLS_DEFAULT from Python dashboard
+  // Columns hidden by default - mirrors HIDDEN_COLS_DEFAULT from Python dashboard
   hiddenColumns = new Set<string>([
-    'animal_id',
     'date_of_birth',
     'datetime',
     'location_lat',
@@ -102,7 +109,7 @@ export class DashboardComponent implements OnInit {
   // Called when a filter button is clicked
   selectRescueType(type: string): void {
     this.rescueType = type;
-    this.currentPage = 0;      // reset to first page on filter change
+    this.currentPage = 0;   // reset to first page on filter change
     this.loadAnimals();
     this.loadBreedData();
   }
@@ -128,7 +135,7 @@ export class DashboardComponent implements OnInit {
 
           this.loading = false;
 
-          this.cdr.detectChanges(); // FORCE UI UPDATE
+          this.cdr.detectChanges(); // force UI update after data change
 
           console.log("STATE UPDATED");
         },

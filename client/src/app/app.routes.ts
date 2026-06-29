@@ -1,3 +1,7 @@
+/**
+ * app.routes.ts - Application routing configuration
+ * Defines all routes with titles, lazy loading, and route guards.
+ */
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard';
 import { Home } from './pages/home/home';
