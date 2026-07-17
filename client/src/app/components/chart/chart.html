@@ -1,7 +1,31 @@
+<!--
+  chart.html - Template for ChartComponent
+  Renders a pie chart showing breed distribution for selected rescue type
+  Displays empty state message when no data is available
+-->
+
 <div class="chart-wrapper">
+  <!--
+    Chart Title
+    Dynamically generated based on selected rescue type
+    Shows breed distribution label or instruction message
+  -->
   <h3 class="chart-title">{{ getTitle() }}</h3>
+
+  <!--
+    Empty State
+    Displayed when no breed data is available
+    Prompts user to select a rescue filter to view data
+  -->
   <div *ngIf="breedData.length === 0" class="chart-empty">
     Select a rescue filter to see breed distribution.
   </div>
+
+  <!--
+    Canvas Element
+    Renders the pie chart when breed data is available
+    Referenced by ViewChild('chartCanvas') in the component
+    Chart.js renders the chart on this canvas element
+  -->
   <canvas *ngIf="breedData.length > 0" #chartCanvas></canvas>
 </div>

@@ -1,9 +1,23 @@
+/**
+ * chart.scss - Styles for ChartComponent
+ * Provides styling for the breed distribution pie chart
+ * Includes responsive container, title styling, and empty state
+ */
+
+// ============================================
+// CHART CONTAINER
+// ============================================
+
 .chart-wrapper {
   padding: 0.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
+// ============================================
+// CHART TITLE
+// ============================================
 
 .chart-title {
   font-size: 0.95rem;
@@ -12,6 +26,10 @@
   text-align: center;
 }
 
+// ============================================
+// EMPTY STATE
+// ============================================
+
 .chart-empty {
   color: #999;
   font-size: 0.85rem;
@@ -19,10 +37,18 @@
   text-align: center;
 }
 
+// ============================================
+// CANVAS ELEMENT
+// ============================================
+
 canvas {
   max-width: 500px;
   max-height: 400px;
 }
+
+// ============================================
+// HEADER RESET
+// ============================================
 
 h3 {
   margin: 0;

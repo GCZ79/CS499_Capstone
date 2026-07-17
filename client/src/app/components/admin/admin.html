@@ -1,0 +1,218 @@
+<!--
+  Admin Component Template
+  ========================
+  This template provides the administrative interface for the application,
+  offering three main functional sections:
+
+  1. Database Backup - Create new backups of the application database
+  2. Restore Database - Select and restore from existing backup files
+  3. Audit Log - View paginated audit trail of system actions
+
+  All sections include pagination controls for better data management
+  and user experience.
+-->
+
+<div class="admin-container">
+
+  <hr>
+
+  <h1>Administration</h1>
+
+  <hr>
+
+  <!-- ======================================== -->
+  <!-- SECTION 1: Database Backup               -->
+  <!-- ======================================== -->
+
+  <h3>Database Backup</h3>
+
+  <button class="btn btn-admin"
+          (click)="createBackup()">
+    ➕ Create Backup
+  </button>
+
+  <div *ngIf="backupMessage">
+    <p>
+      {{ backupMessage }}
+    </p>
+
+    <p>
+      {{ backupFile }}
+    </p>
+  </div>
+
+  <hr>
+
+  <!-- ======================================== -->
+  <!-- SECTION 2: Restore Database              -->
+  <!-- ======================================== -->
+
+  <h3>Restore Database</h3>
+
+  <h4>Available Backups</h4>
+
+  <table class="backup-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Date Created</th>
+        <th>Filename</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let file of displayedBackups"
+          (click)="selectBackup(file)"
+          [class.selected]="restoreFilename === file">
+        <td>
+          <input type="radio"
+                 [checked]="restoreFilename === file">
+        </td>
+        <td>
+          {{ formatBackupDate(file) }}
+        </td>
+        <td>
+          {{ file }}
+        </td>
+        <td>
+          <button class="btn btn-admin"
+                  (click)="downloadBackup(file); $event.stopPropagation()">
+            ⬇️ Download
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+
+    <button (click)="previousBackupPage()"
+            [disabled]="backupPage === 0">
+      ⏪ Previous
+    </button>
+
+    <span>
+      Page {{backupPage + 1}}
+      of
+      {{Math.ceil(backups.length / backupPageSize)}}
+    </span>
+
+    <button (click)="nextBackupPage()"
+            [disabled]="(backupPage + 1) * backupPageSize >= backups.length">
+      ⏩ Next
+    </button>
+  </div>
+
+  <br>
+
+  <label>
+    Selected Backup
+  </label>
+
+  <br>
+
+  <input [(ngModel)]="restoreFilename"
+         size="50"
+         readonly>
+  <br>
+
+  <br>
+
+  <button class="btn btn-admin"
+          (click)="restoreBackup()">
+    🔄 Restore Database
+  </button>
+
+  <div *ngIf="restoreMessage">
+    <p>
+      {{ restoreMessage }}
+    </p>
+
+    <p>
+      Records Imported:
+      {{ recordsImported }}
+    </p>
+
+    <p>
+      Records Corrected:
+      {{ recordsCorrected }}
+    </p>
+  </div>
+
+  <hr>
+
+  <!-- ======================================== -->
+  <!-- SECTION 3: Audit Log                     -->
+  <!-- ======================================== -->
+
+  <h3>Audit Log</h3>
+
+  <table class="audit-table">
+    <thead>
+      <tr>
+        <th>
+          Username
+        </th>
+        <th>
+          Role
+        </th>
+        <th>
+          Action
+        </th>
+        <th>
+          Details
+        </th>
+        <th>
+          Date
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let log of displayedAuditLogs">
+        <td>
+          {{ log.username }}
+        </td>
+        <td>
+          {{ log.role }}
+        </td>
+        <td>
+          {{ log.action }}
+        </td>
+        <td>
+          {{ log.details }}
+        </td>
+        <td>
+          {{ log.timestamp | date:'medium' }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button (click)="previousAuditPage()"
+            [disabled]="auditPage === 0">
+      ⏪ Previous
+    </button>
+
+    <span>
+      Page {{auditPage + 1}}
+      of
+      {{Math.ceil(auditLogs.length / auditPageSize)}}
+    </span>
+
+    <button (click)="nextAuditPage()"
+            [disabled]="(auditPage + 1) * auditPageSize >= auditLogs.length">
+      ⏩ Next
+    </button>
+  </div>
+
+  <hr>
+
+  <br />
+
+  <button (click)="returnDashboard()">
+    ↩️ Return to Dashboard
+  </button>
+</div>

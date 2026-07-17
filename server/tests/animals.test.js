@@ -8,8 +8,10 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const express = require('express');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const { validateQuery } = require('../middleware/validate');
 const animalsRoute = require('../routes/animals');
+const Animal = require('../models/Animal');
 
 // Build a minimal Express app for testing - mirrors app.js without
 // helmet, cors, and rate limiting which are not relevant to route logic
@@ -17,16 +19,47 @@ const app = express();
 app.use(express.json());
 app.use('/api/animals', validateQuery, animalsRoute);
 
+let mongoServer;
+
 // *** Setup / Teardown ***
 
 beforeAll(async () => {
-    // Connect to the same local MongoDB used in development
-    // In a CI environment this should point to a dedicated test database
-    await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/aac');
+    // Spin up an isolated in-memory MongoDB instance for this test file.
+    mongoServer = await MongoMemoryServer.create();
+
+    if (mongoose.connection.readyState === 0) {
+        await mongoose.connect(mongoServer.getUri());
+    }
+});
+
+beforeEach(async () => {
+    // Clear and seed test data before each test
+    await Animal.deleteMany({});
+    await Animal.create([
+        {
+            animal_id: 'A001',
+            name: 'Buddy',
+            breed: 'Labrador',
+            animal_type: 'Dog'
+        },
+        {
+            animal_id: 'A002',
+            name: 'Max',
+            breed: 'German Shepherd',
+            animal_type: 'Dog'
+        },
+        {
+            animal_id: 'A003',
+            name: 'Luna',
+            breed: 'Husky',
+            animal_type: 'Dog'
+        }
+    ]);
 });
 
 afterAll(async () => {
     await mongoose.disconnect();
+    await mongoServer.stop();
 });
 
 // *** GET /api/animals ***
@@ -130,9 +163,9 @@ describe('GET /api/animals/:id', () => {
         expect(res.body).toHaveProperty('error');
     });
 
-    test('returns 500 for a malformed id', async () => {
+    test('returns 400 for a malformed id', async () => {
         const res = await request(app).get('/api/animals/not-a-valid-id');
-        expect(res.status).toBe(500);
+        expect(res.status).toBe(400);
     });
 
 });

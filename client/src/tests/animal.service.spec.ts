@@ -4,44 +4,36 @@
  * Angular 21 + Vitest
  */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting
-} from '@angular/common/http/testing';
-
+import { HttpClient } from '@angular/common/http';
+import { of, throwError, firstValueFrom } from 'rxjs';
 import {
   AnimalService,
   Animal,
   AnimalResponse,
   BreedCount
 } from '../app/services/animal';
-
 import { environment } from '../environments/environments';
 
 describe('AnimalService', () => {
-
   let service: AnimalService;
-  let httpMock: HttpTestingController;
+  let httpClientMock: any;
 
   beforeEach(() => {
+    // Create a mock HttpClient
+    httpClientMock = {
+      get: vi.fn()
+    };
+
     TestBed.configureTestingModule({
       providers: [
         AnimalService,
-        provideHttpClient(),
-        provideHttpClientTesting()
+        { provide: HttpClient, useValue: httpClientMock }
       ]
     });
 
     service = TestBed.inject(AnimalService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
   });
 
   //
@@ -50,149 +42,124 @@ describe('AnimalService', () => {
 
   describe('getAnimals()', () => {
 
-    it('returns expected response shape', () => {
-
-      service.getAnimals('reset', 0, 10).subscribe((res: AnimalResponse) => {
-        expect(res).toHaveProperty('animals');
-        expect(res).toHaveProperty('total');
-        expect(res).toHaveProperty('page');
-        expect(res).toHaveProperty('pageSize');
-        expect(Array.isArray(res.animals)).toBe(true);
-      });
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals`
-      );
-
-      expect(req.request.method).toBe('GET');
-
-      req.flush({
+    it('returns expected response shape', async () => {
+      const mockResponse: AnimalResponse = {
         animals: [],
         total: 0,
         page: 0,
         pageSize: 10
-      });
+      };
 
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      const result = await firstValueFrom(service.getAnimals('reset', 0, 10));
+      
+      expect(result).toHaveProperty('animals');
+      expect(result).toHaveProperty('total');
+      expect(result).toHaveProperty('page');
+      expect(result).toHaveProperty('pageSize');
+      expect(Array.isArray(result.animals)).toBe(true);
+      expect(result).toEqual(mockResponse);
+
+      // Verify the HTTP call was made with correct parameters
+      expect(httpClientMock.get).toHaveBeenCalledWith(
+        `${environment.apiUrl}/animals`,
+        expect.objectContaining({
+          params: expect.any(Object)
+        })
+      );
     });
 
-    it('sends correct rescueType parameter', () => {
-
-      service.getAnimals('water', 0, 10).subscribe();
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals`
-      );
-
-      expect(req.request.params.get('rescueType')).toBe('water');
-
-      req.flush({
+    it('sends correct rescueType parameter', async () => {
+      const mockResponse: AnimalResponse = {
         animals: [],
         total: 0,
         page: 0,
         pageSize: 10
-      });
+      };
 
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      await firstValueFrom(service.getAnimals('water', 0, 10));
+
+      // Verify the params include rescueType
+      const callArgs = httpClientMock.get.mock.calls[0];
+      expect(callArgs[1].params.get('rescueType')).toBe('water');
     });
 
-    it('sends correct page parameter', () => {
-
-      service.getAnimals('reset', 2, 10).subscribe();
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals`
-      );
-
-      expect(req.request.params.get('page')).toBe('2');
-
-      req.flush({
+    it('sends correct page parameter', async () => {
+      const mockResponse: AnimalResponse = {
         animals: [],
         total: 0,
         page: 2,
         pageSize: 10
-      });
+      };
 
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      await firstValueFrom(service.getAnimals('reset', 2, 10));
+
+      const callArgs = httpClientMock.get.mock.calls[0];
+      expect(callArgs[1].params.get('page')).toBe('2');
     });
 
-    it('sends correct pageSize parameter', () => {
-
-      service.getAnimals('reset', 0, 5).subscribe();
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals`
-      );
-
-      expect(req.request.params.get('pageSize')).toBe('5');
-
-      req.flush({
+    it('sends correct pageSize parameter', async () => {
+      const mockResponse: AnimalResponse = {
         animals: [],
         total: 0,
         page: 0,
         pageSize: 5
-      });
+      };
 
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      await firstValueFrom(service.getAnimals('reset', 0, 5));
+
+      const callArgs = httpClientMock.get.mock.calls[0];
+      expect(callArgs[1].params.get('pageSize')).toBe('5');
     });
 
-    it('includes cache-busting parameter', () => {
-
-      service.getAnimals('reset', 0, 10).subscribe();
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals`
-      );
-
-      expect(req.request.params.has('_t')).toBe(true);
-
-      req.flush({
+    it('includes cache-busting parameter', async () => {
+      const mockResponse: AnimalResponse = {
         animals: [],
         total: 0,
         page: 0,
         pageSize: 10
-      });
+      };
 
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      await firstValueFrom(service.getAnimals('reset', 0, 10));
+
+      const callArgs = httpClientMock.get.mock.calls[0];
+      expect(callArgs[1].params.has('_t')).toBe(true);
     });
 
-    it('returns 400 for invalid rescue type', () => {
+    it('returns 400 for invalid rescue type', async () => {
+      const errorResponse = {
+        status: 400,
+        statusText: 'Bad Request',
+        error: { error: 'Invalid rescue type' }
+      };
 
-      service.getAnimals('invalid', 0, 10).subscribe({
-        next: () => {
-          throw new Error('Expected request to fail.');
-        },
-        error: err => {
-          expect(err.status).toBe(400);
-        }
+      httpClientMock.get.mockReturnValue(throwError(() => errorResponse));
+
+      await expect(firstValueFrom(service.getAnimals('invalid', 0, 10))).rejects.toMatchObject({
+        status: 400
       });
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals`
-      );
-
-      req.flush(
-        { error: 'Invalid rescue type' },
-        {
-          status: 400,
-          statusText: 'Bad Request'
-        }
-      );
-
     });
 
-    it('returns network error', () => {
+    it('returns network error', async () => {
+      const errorResponse = {
+        status: 0,
+        statusText: 'Network Error'
+      };
 
-      service.getAnimals('reset', 0, 10).subscribe({
-        next: () => {
-          throw new Error('Expected request to fail.');
-        },
-        error: err => {
-          expect(err.status).toBe(0);
-        }
+      httpClientMock.get.mockReturnValue(throwError(() => errorResponse));
+
+      await expect(firstValueFrom(service.getAnimals('reset', 0, 10))).rejects.toMatchObject({
+        status: 0
       });
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals`
-      );
-
-      req.error(new ProgressEvent('Network error'));
-
     });
 
   });
@@ -203,98 +170,68 @@ describe('AnimalService', () => {
 
   describe('getBreedDistribution()', () => {
 
-    it('returns array of breed counts', () => {
-
-      service.getBreedDistribution('water').subscribe((res: BreedCount[]) => {
-        expect(Array.isArray(res)).toBe(true);
-      });
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals/breeds`
-      );
-
-      expect(req.request.method).toBe('GET');
-
-      req.flush([
+    it('returns array of breed counts', async () => {
+      const mockBreeds: BreedCount[] = [
         { breed: 'Labrador', count: 10 },
         { breed: 'German Shepherd', count: 8 }
-      ]);
+      ];
 
+      httpClientMock.get.mockReturnValue(of(mockBreeds));
+
+      const result = await firstValueFrom(service.getBreedDistribution('water'));
+      
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toEqual(mockBreeds);
+
+      const callArgs = httpClientMock.get.mock.calls[0];
+      expect(callArgs[1].params.get('rescueType')).toBe('water');
     });
 
-    it('sends correct rescueType parameter', () => {
+    it('sends correct rescueType parameter', async () => {
+      httpClientMock.get.mockReturnValue(of([]));
 
-      service.getBreedDistribution('mountain').subscribe();
+      await firstValueFrom(service.getBreedDistribution('mountain'));
 
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals/breeds`
-      );
-
-      expect(req.request.params.get('rescueType')).toBe('mountain');
-
-      req.flush([]);
-
+      const callArgs = httpClientMock.get.mock.calls[0];
+      expect(callArgs[1].params.get('rescueType')).toBe('mountain');
     });
 
-    it('returns empty array when no results exist', () => {
+    it('returns empty array when no results exist', async () => {
+      httpClientMock.get.mockReturnValue(of([]));
 
-      service.getBreedDistribution('water').subscribe(res => {
-        expect(res.length).toBe(0);
-      });
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals/breeds`
-      );
-
-      req.flush([]);
-
+      const result = await firstValueFrom(service.getBreedDistribution('water'));
+      
+      expect(result.length).toBe(0);
+      expect(Array.isArray(result)).toBe(true);
     });
 
-    it('ensures each entry has breed and count fields', () => {
-
-      service.getBreedDistribution('water').subscribe(res => {
-
-        if (res.length > 0) {
-          expect(res[0]).toHaveProperty('breed');
-          expect(res[0]).toHaveProperty('count');
-          expect(typeof res[0].count).toBe('number');
-        }
-
-      });
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals/breeds`
-      );
-
-      req.flush([
+    it('ensures each entry has breed and count fields', async () => {
+      const mockBreeds: BreedCount[] = [
         { breed: 'Labrador', count: 10 }
-      ]);
+      ];
 
+      httpClientMock.get.mockReturnValue(of(mockBreeds));
+
+      const result = await firstValueFrom(service.getBreedDistribution('water'));
+      
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0]).toHaveProperty('breed');
+      expect(result[0]).toHaveProperty('count');
+      expect(typeof result[0].count).toBe('number');
     });
 
-    it('returns 500 error from backend', () => {
+    it('returns 500 error from backend', async () => {
+      const errorResponse = {
+        status: 500,
+        statusText: 'Internal Server Error',
+        error: { error: 'Server error' }
+      };
 
-      service.getBreedDistribution('water').subscribe({
-        next: () => {
-          throw new Error('Expected request to fail.');
-        },
-        error: err => {
-          expect(err.status).toBe(500);
-        }
+      httpClientMock.get.mockReturnValue(throwError(() => errorResponse));
+
+      await expect(firstValueFrom(service.getBreedDistribution('water'))).rejects.toMatchObject({
+        status: 500
       });
-
-      const req = httpMock.expectOne(
-        r => r.url === `${environment.apiUrl}/animals/breeds`
-      );
-
-      req.flush(
-        { error: 'Server error' },
-        {
-          status: 500,
-          statusText: 'Internal Server Error'
-        }
-      );
-
     });
 
   });
@@ -305,88 +242,66 @@ describe('AnimalService', () => {
 
   describe('getAnimalById()', () => {
 
-    it('returns animal for valid id', () => {
-
+    it('returns animal for valid id', async () => {
       const mockAnimal: Animal = {
         _id: '123',
+        animal_id: 'A123456',
         animal_type: 'Dog',
         breed: 'Labrador',
         name: 'Buddy',
+        color: 'Yellow',
         sex_upon_outcome: 'Intact Male',
         age_upon_outcome: '2 years',
         age_upon_outcome_in_weeks: 104,
         outcome_type: 'Adoption',
+        outcome_subtype: 'Foster',
+        date_of_birth: '2020-01-15',
+        datetime: '2022-01-15T10:00:00Z',
         location_lat: 30.75,
         location_long: -97.48
       };
 
-      service.getAnimalById('123').subscribe(res => {
-        expect(res._id).toBe('123');
-        expect(res.name).toBe('Buddy');
-      });
+      httpClientMock.get.mockReturnValue(of(mockAnimal));
 
-      const req = httpMock.expectOne(
+      const result = await firstValueFrom(service.getAnimalById('123'));
+      
+      expect(result._id).toBe('123');
+      expect(result.name).toBe('Buddy');
+      expect(result).toEqual(mockAnimal);
+
+      expect(httpClientMock.get).toHaveBeenCalledWith(
         `${environment.apiUrl}/animals/123`
       );
-
-      expect(req.request.method).toBe('GET');
-
-      req.flush(mockAnimal);
-
     });
 
-    it('returns 404 for non-existent id', () => {
-
+    it('returns 404 for non-existent id', async () => {
       const fakeId = '000000000000000000000000';
+      const errorResponse = {
+        status: 404,
+        statusText: 'Not Found',
+        error: { error: 'Not found' }
+      };
 
-      service.getAnimalById(fakeId).subscribe({
-        next: () => {
-          throw new Error('Expected request to fail.');
-        },
-        error: err => {
-          expect(err.status).toBe(404);
-        }
+      httpClientMock.get.mockReturnValue(throwError(() => errorResponse));
+
+      await expect(firstValueFrom(service.getAnimalById(fakeId))).rejects.toMatchObject({
+        status: 404
       });
-
-      const req = httpMock.expectOne(
-        `${environment.apiUrl}/animals/${fakeId}`
-      );
-
-      req.flush(
-        { error: 'Not found' },
-        {
-          status: 404,
-          statusText: 'Not Found'
-        }
-      );
-
     });
 
-    it('returns 500 for malformed id', () => {
-
+    it('returns 500 for malformed id', async () => {
       const badId = 'not-valid';
+      const errorResponse = {
+        status: 500,
+        statusText: 'Internal Server Error',
+        error: { error: 'Server error' }
+      };
 
-      service.getAnimalById(badId).subscribe({
-        next: () => {
-          throw new Error('Expected request to fail.');
-        },
-        error: err => {
-          expect([400, 500]).toContain(err.status);
-        }
+      httpClientMock.get.mockReturnValue(throwError(() => errorResponse));
+
+      await expect(firstValueFrom(service.getAnimalById(badId))).rejects.toMatchObject({
+        status: 500
       });
-
-      const req = httpMock.expectOne(
-        `${environment.apiUrl}/animals/${badId}`
-      );
-
-      req.flush(
-        { error: 'Server error' },
-        {
-          status: 500,
-          statusText: 'Internal Server Error'
-        }
-      );
-
     });
 
   });

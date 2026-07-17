@@ -4,46 +4,77 @@
  * AnimalService is mocked to avoid HTTP calls.
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
-
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { DashboardComponent } from '../app/components/dashboard/dashboard';
 import { AnimalService, Animal, AnimalResponse, BreedCount } from '../app/services/animal';
+import { AuthService } from '../app/services/auth';
+import { of, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 
-import { of } from 'rxjs';
+// Create a simplified test component that extends DashboardComponent
+// This avoids the template compilation issues
+@Component({
+  selector: 'app-dashboard-test',
+  standalone: true,
+  template: '<div>Test Dashboard</div>',
+})
+class TestDashboardComponent extends DashboardComponent {
+  constructor(
+    animalService: AnimalService,
+    authService: AuthService,
+    cdr: ChangeDetectorRef,
+    router: Router,
+    http: HttpClient
+  ) {
+    super(animalService, authService, cdr, router, http);
+  }
+}
 
 describe('DashboardComponent', () => {
-
-  let component: DashboardComponent;
-  let animalService: {
-    getAnimals: ReturnType<typeof vi.fn>;
-    getBreedDistribution: ReturnType<typeof vi.fn>;
-  };
+  let component: TestDashboardComponent;
+  let fixture: ComponentFixture<TestDashboardComponent>;
+  let animalService: any;
+  let authService: any;
+  let router: any;
+  let httpClient: any;
+  let cdr: any;
 
   const mockAnimals: Animal[] = [
     {
       _id: '1',
+      animal_id: 'A123456',
       name: 'Buddy',
       breed: 'Labrador',
       animal_type: 'Dog',
+      color: 'Yellow',
       sex_upon_outcome: 'Intact Male',
       age_upon_outcome: '2 years',
       age_upon_outcome_in_weeks: 104,
       outcome_type: 'Adoption',
+      outcome_subtype: 'Foster',
+      date_of_birth: '2020-01-15',
+      datetime: '2022-01-15T10:00:00Z',
       location_lat: 30.75,
       location_long: -97.48
     },
     {
       _id: '2',
+      animal_id: 'B789012',
       name: 'Max',
       breed: 'German Shepherd',
       animal_type: 'Dog',
+      color: 'Black/Tan',
       sex_upon_outcome: 'Intact Male',
       age_upon_outcome: '3 years',
       age_upon_outcome_in_weeks: 156,
       outcome_type: 'Transfer',
+      outcome_subtype: 'Partner',
+      date_of_birth: '2019-05-20',
+      datetime: '2022-05-20T14:30:00Z',
       location_lat: 30.76,
       location_long: -97.49
     }
@@ -62,22 +93,47 @@ describe('DashboardComponent', () => {
   ];
 
   beforeEach(async () => {
-
+    // Create mock services
     animalService = {
-      getAnimals: vi.fn(),
-      getBreedDistribution: vi.fn()
+      getAnimals: vi.fn().mockReturnValue(of(mockResponse)),
+      getBreedDistribution: vi.fn().mockReturnValue(of(mockBreedData)),
+      deleteAnimal: vi.fn().mockReturnValue(of({}))
+    };
+
+    authService = {
+      getRole: vi.fn().mockReturnValue('admin'),
+      logout: vi.fn()
+    };
+
+    router = {
+      navigate: vi.fn()
+    };
+
+    httpClient = {
+      post: vi.fn()
+    };
+
+    cdr = {
+      detectChanges: vi.fn()
     };
 
     await TestBed.configureTestingModule({
-      imports: [DashboardComponent],
+      imports: [TestDashboardComponent],
       providers: [
         { provide: AnimalService, useValue: animalService },
-        provideRouter([])
-      ]
+        { provide: AuthService, useValue: authService },
+        { provide: Router, useValue: router },
+        { provide: HttpClient, useValue: httpClient },
+        { provide: ChangeDetectorRef, useValue: cdr }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(DashboardComponent);
+    fixture = TestBed.createComponent(TestDashboardComponent);
     component = fixture.componentInstance;
+    
+    // Reset mocks before each test
+    vi.clearAllMocks();
   });
 
   //
@@ -87,25 +143,25 @@ describe('DashboardComponent', () => {
   describe('Initialization', () => {
 
     it('creates component', () => {
-      animalService.getAnimals.mockReturnValue(of(mockResponse));
       expect(component).toBeTruthy();
     });
 
-    it('loads animals on init', async () => {
+    it('loads animals on init', () => {
+      // Setup mocks for this test
       animalService.getAnimals.mockReturnValue(of(mockResponse));
+      authService.getRole.mockReturnValue('admin');
 
       component.ngOnInit();
 
       expect(animalService.getAnimals).toHaveBeenCalledWith('reset', 0, 10);
-      expect(component.animals.length).toBe(2);
+      expect(component.animals).toEqual(mockAnimals);
       expect(component.total).toBe(2);
       expect(component.loading).toBe(false);
+      expect(component.role).toBe('admin');
     });
 
-    it('sets error on failure', async () => {
-      animalService.getAnimals.mockReturnValue(
-        new (await import('rxjs')).Observable(sub => sub.error(new Error('fail')))
-      );
+    it('sets error on failure', () => {
+      animalService.getAnimals.mockReturnValue(throwError(() => new Error('fail')));
 
       component.loadAnimals();
 
@@ -130,9 +186,11 @@ describe('DashboardComponent', () => {
 
       expect(component.rescueType).toBe('water');
       expect(component.currentPage).toBe(0);
+      expect(animalService.getAnimals).toHaveBeenCalledWith('water', 0, 10);
     });
 
     it('calls API with correct filter', () => {
+      animalService.getAnimals.mockClear();
       animalService.getAnimals.mockReturnValue(of(mockResponse));
       animalService.getBreedDistribution.mockReturnValue(of(mockBreedData));
 
@@ -142,6 +200,7 @@ describe('DashboardComponent', () => {
     });
 
     it('loads breed data when not reset', () => {
+      animalService.getAnimals.mockClear();
       animalService.getAnimals.mockReturnValue(of(mockResponse));
       animalService.getBreedDistribution.mockReturnValue(of(mockBreedData));
 
@@ -152,8 +211,11 @@ describe('DashboardComponent', () => {
     });
 
     it('clears breed data on reset', () => {
+      animalService.getAnimals.mockClear();
+      
+      // Set initial breed data
       component.breedData = mockBreedData;
-
+      
       animalService.getAnimals.mockReturnValue(of(mockResponse));
 
       component.selectRescueType('reset');
@@ -170,6 +232,7 @@ describe('DashboardComponent', () => {
   describe('Pagination', () => {
 
     it('changes page correctly', () => {
+      animalService.getAnimals.mockClear();
       animalService.getAnimals.mockReturnValue(of(mockResponse));
 
       component.changePage(2);

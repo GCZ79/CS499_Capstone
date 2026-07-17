@@ -1,8 +1,14 @@
 /**
- * Header inner container
- * Centered layout with maximum width for readability
- * Flex layout distributes space between logo and navigation
+ * header.scss - Styles for HeaderComponent
+ * Defines the styling for the main navigation header
+ * Features a responsive layout with logo, navigation links, and support button
+ * Uses flexbox for alignment and spacing
  */
+
+// ============================================
+// HEADER INNER CONTAINER
+// ============================================
+
 .header-inner {
   max-width: 1500px;
   width: 100%;
@@ -13,9 +19,10 @@
   gap: 20px;
 }
 
-/**
- * Logo area - contains logo image and site title
- */
+// ============================================
+// LOGO AREA
+// ============================================
+
 .logo-area {
   display: flex;
   align-items: center;
@@ -24,9 +31,10 @@
   flex-shrink: 0;
 }
 
-/**
- * Navigation area - contains nav links and support button
- */
+// ============================================
+// NAVIGATION AREA
+// ============================================
+
 .nav-area {
   display: flex;
   flex-wrap: wrap;
@@ -46,6 +54,10 @@
   color: #c9134b;
   margin: 0;
 }
+
+// ============================================
+// NAVIGATION LINKS
+// ============================================
 
 .nav-links {
   display: flex;
@@ -78,10 +90,10 @@
   border-color: #c9134b;
 }
 
-/**
- * Support/Donate button
- * Distinct styling from nav links (black border, white background)
- */
+// ============================================
+// SUPPORT BUTTON
+// ============================================
+
 .support-btn {
   display: inline-flex;
   flex-shrink: 0;
@@ -98,10 +110,10 @@
   color: black;
 }
 
-/**
- * Responsive design - tablet and mobile
- * Allows header elements to wrap on smaller screens
- */
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
+
 @media (max-width: 768px) {
   .header-inner {
     flex-wrap: wrap;

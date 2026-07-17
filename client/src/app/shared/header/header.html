@@ -1,22 +1,53 @@
+<!--
+  header.html - Template for HeaderComponent
+  Displays the main navigation header with logo, navigation links, and support button
+  Uses RouterModule for navigation and active link highlighting
+-->
+
 <header class="navbar page-grid">
   <div class="content header-inner">
+
+    <!-- ======================================== -->
+    <!-- LOGO AREA                               -->
+    <!-- ======================================== -->
+
     <div class="logo-area">
+      <!-- Organization logo image -->
       <img src="logo.png" style="width: 60px;" alt="Grazioso Salvare">
+
+      <!-- Organization name -->
       <h1>Grazioso Salvare</h1>
     </div>
 
+    <!-- ======================================== -->
+    <!-- NAVIGATION AREA                         -->
+    <!-- ======================================== -->
+
     <div class="nav-area">
+
+      <!-- Navigation Links -->
       <nav class="nav-links">
+        <!-- Home - exact match required for active state -->
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+
+        <!-- Training Programs -->
         <a routerLink="/training" routerLinkActive="active">Training Programs</a>
+
+        <!-- About Us -->
         <a routerLink="/about" routerLinkActive="active">About Us</a>
+
+        <!-- Contact -->
         <a routerLink="/contact" routerLinkActive="active">Contact</a>
+
+        <!-- Dashboard -->
         <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
       </nav>
 
+      <!-- Support/Donate Button - Opens in new tab -->
       <a href="https://www.gofundme.com/" target="_blank" class="support-btn">
         Support Our Mission
       </a>
+
     </div>
   </div>
 </header>

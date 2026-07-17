@@ -1,8 +1,12 @@
 /**
- * Hero section styles
- * Full-width banner with background image
- * Uses centered background with auto sizing
+ * home.scss - Styles for HomeComponent
+ * Defines the styling for the home page including hero section, mission, and training cards
+ * Features responsive design with grid layouts and hover effects
  */
+
+// ============================================
+// HERO SECTION
+// ============================================
 
 .hero {
   background-image: url('/assets/images/hero.png');
@@ -31,15 +35,12 @@
 .hero-text h1,
 .hero-text p {
   color: #000;
-  text-shadow:
-      -2px -2px 0 #fff,
-      2px -2px 0 #fff,
- }
+  text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff;
+}
 
-/**
- * Mission section layout
- * Two-column grid: mission text takes 1/3, content takes 2/3
- */
+// ============================================
+// MISSION SECTION
+// ============================================
 
 .mission-layout {
   display: grid;
@@ -63,7 +64,10 @@
   box-shadow: 0 8px 20px rgba(0,0,0,.15);
 }
 
-// Training section layout
+// ============================================
+// TRAINING SECTION
+// ============================================
+
 .training h2,
 .training h3,
 .training p {
@@ -71,10 +75,9 @@
   text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
 }
 
-/**
- * Cards grid layout
- * Three equal columns with consistent gap
- */
+// ============================================
+// CARDS GRID
+// ============================================
 
 .cards {
   display: grid;
@@ -117,16 +120,19 @@
   cursor: pointer;
 }
 
-/**
- * Responsive design - tablet and mobile
- * Changes cards from 3 columns to 1 column on smaller screens
- */
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
 
 @media (max-width: 768px) {
   .cards {
     grid-template-columns: 1fr;
   }
 }
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
 
 img, .content, .cards {
   max-width: 100%;

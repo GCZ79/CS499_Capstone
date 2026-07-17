@@ -1,17 +1,26 @@
+/**
+ * about.scss - Styles for AboutComponent
+ * Defines the styling for the about page section
+ * Features a background image with gradient overlay and responsive layout
+ */
+
+// ============================================
+// ABOUT SECTION CONTAINER
+// ============================================
+
 .about-section {
   max-width: 1500px;
   margin: 5px auto;
   padding: 60px 20px;
-  background: linear-gradient(
-                rgba(255, 255, 255, 0.25),
-                rgba(255, 255, 255, 0.75)
-                ),
-              url("/assets/images/about_bg.png");
-
+  background: linear-gradient( rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.75) ), url("/assets/images/about_bg.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
+
+// ============================================
+// ABOUT US CONTENT
+// ============================================
 
 .about-us {
   max-width: 900px;
@@ -28,6 +37,10 @@
   align-items: flex-start;
 }
 
+// ============================================
+// TEXT AND IMAGE COLUMNS
+// ============================================
+
 .about-text {
   flex: 1;
 }
@@ -43,6 +56,10 @@
   object-fit: cover;
   display: block;
 }
+
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
 
 @media (max-width: 768px) {
   .about-us {

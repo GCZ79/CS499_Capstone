@@ -1,16 +1,27 @@
+/**
+ * training.scss - Styles for TrainingComponent
+ * Defines the styling for the training programs page
+ * Features a background image with gradient overlay and responsive layout
+ * Each training program is displayed in a flex row with image and text
+ */
+
+// ============================================
+// TRAINING SECTION CONTAINER
+// ============================================
+
 .training-section {
   max-width: 1500px;
   margin: 5px auto;
   padding: 60px 20px;
-  background: linear-gradient(
-                rgba(255, 255, 255, 0.25),
-                rgba(255, 255, 255, 0.75)
-              ),
-              url("/assets/images/training_room.png" );
+  background: linear-gradient( rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.75) ), url("/assets/images/training_room.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
+
+// ============================================
+// TRAINING CONTENT WRAPPER
+// ============================================
 
 .training-content {
   max-width: 900px;
@@ -27,6 +38,10 @@
   gap: 24px;
 }
 
+// ============================================
+// PROGRAM ROW
+// ============================================
+
 .program {
   display: flex;
   gap: 24px;
@@ -41,6 +56,10 @@
   flex: 1;
 }
 
+// ============================================
+// DISASTER PROGRAM - RIGHT ALIGNMENT
+// ============================================
+
 #disaster .program-text {
   text-align: right;
 }
@@ -53,12 +72,20 @@
   padding-left: 20px;
 }
 
+// ============================================
+// DIVIDER
+// ============================================
+
 hr {
   border: none;
   height: 2px;
   background-color: #c9134b;
   margin: 0.2rem 0;
 }
+
+// ============================================
+// PROGRAM IMAGES
+// ============================================
 
 .program-image img {
   width: 100%;
@@ -68,7 +95,10 @@ hr {
   display: block;
 }
 
-/* TYPOGRAPHY */
+// ============================================
+// TYPOGRAPHY
+// ============================================
+
 h3 {
   margin-top: 0;
   font-size: 20px;
@@ -81,7 +111,10 @@ ul {
   line-height: 1.6;
 }
 
-/* RESPONSIVE (same as about-us) */
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
+
 @media (max-width: 768px) {
   .program {
     flex-direction: column;

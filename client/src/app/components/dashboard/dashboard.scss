@@ -4,9 +4,10 @@
  * Includes responsive design, interactive elements, and consistent branding.
  */
 
-/**
- * Main dashboard container - Centered layout with maximum width for readability
- */
+// ============================================
+// MAIN CONTAINER
+// ============================================
+
 .dashboard {
   font-family: Arial, sans-serif;
   max-width: 1500px;
@@ -14,7 +15,10 @@
   padding: 0.5rem;
 }
 
-// Header section - Flex layout for title and controls
+// ============================================
+// HEADER SECTION
+// ============================================
+
 .header {
   display: flex;
   align-items: center;
@@ -22,13 +26,16 @@
   margin-bottom: 0rem;
 }
 
-.header h1 {
+header h1 {
   font-size: 1.6rem;
   color: #c9134b;
   margin: 0;
 }
 
-// Filter bar - Flex layout for filter controls with wrapping for smaller screens
+// ============================================
+// FILTER BAR
+// ============================================
+
 .filter-bar {
   display: flex;
   align-items: center;
@@ -41,7 +48,10 @@
   font-size: 0.8rem;
 }
 
-// Filter input - Styled text input for filtering data
+// ============================================
+// BUTTON STYLES
+// ============================================
+
 button {
   padding: 2px 4px;
   height: 38px;
@@ -51,9 +61,7 @@ button {
   font-size: 0.8rem;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-
-
+  justify-content: center;  
   &.active {
     font-weight: bold;
     border-color: #c9134b;
@@ -83,7 +91,76 @@ button {
   height: 38px;
 }
 
-// Horizontal rule - Styled separator for visual distinction
+// ============================================
+// CRUD ACTION BUTTONS
+// ============================================
+
+.actions {
+  white-space: nowrap;
+}
+
+.actions button {
+  margin-right: 5px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background-color: #6495ED;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #c9134b;
+  color: white;
+}
+
+.btn-edit:hover {
+  opacity: 0.85;
+}
+
+.btn-delete:hover {
+  opacity: 0.85;
+}
+
+// ============================================
+// SEARCH PANEL
+// ============================================
+
+.search-panel {
+  margin: 20px 0;
+  padding: 20px;
+  font-size: 0.8rem;
+  background: #d9f7ff;
+  border-radius: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-panel input,
+.search-panel select {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+}
+
+.btn-search {
+  background: #0099cc;
+  color: white;
+}
+
+.btn-reset {
+  background: #777;
+  color: white;
+}
+
+// ============================================
+// HORIZONTAL DIVIDER
+// ============================================
+
 hr {
   border: none;
   height: 2px;
@@ -91,7 +168,10 @@ hr {
   margin: 0.2rem 0;
 }
 
-// Table wrapper - Enables horizontal scrolling for tables on smaller screens
+// ============================================
+// DATA TABLE
+// ============================================
+
 .table-wrapper {
   overflow-x: auto;
   margin-top: 0.5rem;
@@ -100,19 +180,16 @@ hr {
 table {
   width: 100%;
   border-collapse: collapse;
-
   th, td {
     text-align: left;
     padding: 8px 12px;
     border-bottom: 1px solid #ddd;
     font-size: 0.8rem;
   }
-
   th {
     background-color: #f5f5f5;
     font-weight: bold;
   }
-
   tr:hover {
     background-color: #f9f9f9;
   }
@@ -122,28 +199,36 @@ tr.selected {
   background-color: #fff3cd;
 }
 
-// Pagination controls - Flex layout for navigation buttons with spacing
+// ============================================
+// PAGINATION CONTROLS
+// ============================================
+
 .pagination {
   display: flex;
   font-size: 0.8rem;
   align-items: center;
   gap: 12px;
   margin-top: 0.5rem;
-
   button:disabled {
     opacity: 0.4;
     cursor: not-allowed;
   }
 }
 
-// Results summary - Smaller font size and muted color for summary text
+// ============================================
+// RESULTS SUMMARY
+// ============================================
+
 .results-summary {
   font-size: 0.85rem;
   color: #666;
   margin-bottom: 0.5rem;
 }
 
-// Status and error messages - Padding and color for visibility
+// ============================================
+// STATUS MESSAGES
+// ============================================
+
 .status-message {
   padding: 1rem;
   color: #666;
@@ -154,7 +239,19 @@ tr.selected {
   color: red;
 }
 
-// Map and chart layout - Flex layout for side-by-side display with responsive design
+.success-message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+}
+
+// ============================================
+// MAP AND CHART LAYOUT
+// ============================================
+
 .map-chart-row {
   display: flex;
   flex-direction: row;
@@ -174,7 +271,6 @@ tr.selected {
 
 .map-chart-details {
   margin: 0.5rem 0;
-
   summary {
     cursor: pointer;
     font-weight: bold;
@@ -184,11 +280,13 @@ tr.selected {
   }
 }
 
-// Column visibility controls - Flex layout for checkboxes with wrapping and spacing
+// ============================================
+// COLUMN VISIBILITY CONTROLS
+// ============================================
+
 .col-visibility {
   margin-top: 0.5rem;
   font-size: 0.85rem;
-
   summary {
     cursor: pointer;
     font-weight: bold;
@@ -202,7 +300,6 @@ tr.selected {
   flex-wrap: wrap;
   gap: 0.4rem 1.2rem;
   padding: 0.5rem 0;
-
   label {
     display: flex;
     align-items: center;
@@ -216,4 +313,28 @@ tr.selected {
   font-size: 0.75rem;
   color: #999;
   margin: 0.25rem 0 0 0;
+}
+
+// ============================================
+// LOGIN PANEL
+// ============================================
+
+.login-panel {
+  margin-top: 10px;
+  padding: 15px;
+  font-size: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-panel input {
+  padding: 6px;
+}
+
+.login-error {
+  color: red;
+  margin-left: 10px;
 }
