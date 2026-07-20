@@ -34,7 +34,7 @@ const animalSchema = new mongoose.Schema({
   strict: false
 });
 
-// [TO-DO] Compound index - Category Two enhancement
+// Compound index
 
 /**
  * Compound index for optimizing rescue type filter queries.

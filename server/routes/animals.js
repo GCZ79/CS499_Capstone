@@ -16,19 +16,54 @@ const mongoose          = require('mongoose');
 const Animal            = require('../models/Animal');
 const AuditLog          = require('../models/AuditLog');
 const queries           = require('../config/rescueQueries');
+const { performance }   = require('perf_hooks');
+const LRUCache          = require('../cache/LRUCache');
+
+const animalCache       = new LRUCache(8);
 
 // GET /api/animals
 // Returns a paginated list of animals, optionally filtered by rescue type
 // Replaces the filter_data() callback from the original Python dashboard
 router.get('/', async (req, res) => {
   try {
+    const startTime = performance.now();
     const rescueType = req.query.rescueType || 'reset';
     const page = parseInt(req.query.page) || 0;
     const pageSize = parseInt(req.query.pageSize) || 10;
 
+    /**
+    * Build a unique cache key using the current rescue
+    * filter and pagination settings.
+    * Each rescue type/page combination is cached separately.
+    */
+    const cacheKey = JSON.stringify({
+      rescueType,
+      page,
+      pageSize
+    });
+
     // Get the MongoDB filter from the rescueQueries config
     // Falls back to an empty query if the rescue type is invalid
     const query = queries[rescueType] || {};
+
+    /**
+    * Check whether the requested data already exists
+    * in the LRU cache.
+    */
+    const cachedResponse = animalCache.get(cacheKey);
+    if (cachedResponse) {
+      // Return a copy so the cached object
+      // is never modified.
+      const response = structuredClone(cachedResponse);
+      response.performance = {
+        source: 'cache',
+        executionTime: Number(
+          (performance.now() - startTime).toFixed(2)
+        )
+      };
+         return res.json(response);
+    }
+
     const skip = page * pageSize;
 
     // Execute the count and data retrieval concurrently
@@ -41,12 +76,30 @@ router.get('/', async (req, res) => {
       Animal.countDocuments(query)
     ]);
 
-    res.json({
+    // Calculate execution time for performance monitoring
+    const executionTime = Number((performance.now() - startTime).toFixed(2));
+
+    /**
+    * Build the response object.
+    * This response is stored in the cache so
+    * repeated requests avoid unnecessary
+    * database queries.
+    */
+    const response = {
       animals,
       total,
       page,
-      pageSize
-    });
+      pageSize,
+      performance: {
+        source: "database",
+        executionTime
+      }
+    };
+
+    // Save the response in the cache.
+    animalCache.set(cacheKey, response);
+
+    res.json(response);
 
   } catch (err) {
     console.error(err);
@@ -99,6 +152,9 @@ router.post(
     const animal = new Animal(req.body);
 
     await animal.save();
+
+    // Clear cached query results because the underlying data changed
+    animalCache.clear();
 
     console.log('JWT user:', req.user);
 
@@ -247,6 +303,9 @@ router.put(
       });
     }
 
+    // Clear cached query results because an existing record was updated
+    animalCache.clear();
+
     try {
 
       await AuditLog.create({
@@ -302,6 +361,9 @@ router.delete(
 
     await animal.deleteOne();
 
+    // Clear cached query results because the underlying data changed
+    animalCache.clear();
+
     try {
 
       await AuditLog.create({
@@ -330,3 +392,4 @@ router.delete(
 });
 
 module.exports = router;
+module.exports.animalCache = animalCache;

@@ -30,6 +30,9 @@ beforeAll(async () => {
     if (mongoose.connection.readyState === 0) {
         await mongoose.connect(mongoServer.getUri());
     }
+
+    // Build Mongoose indexes in the test database
+    await mongoose.connection.syncIndexes();
 });
 
 beforeEach(async () => {
@@ -166,6 +169,69 @@ describe('GET /api/animals/:id', () => {
     test('returns 400 for a malformed id', async () => {
         const res = await request(app).get('/api/animals/not-a-valid-id');
         expect(res.status).toBe(400);
+    });
+
+});
+
+// *** LRU Cache Behavior ***
+
+describe('Animal API LRU Cache', () => {
+
+    beforeEach(() => {
+
+        // Reset cache before each test to avoid state leaking between tests
+        animalsRoute.animalCache.clear();
+
+    });
+
+    test('first GET request retrieves data from database', async () => {
+
+        await Animal.create({
+            animal_id: 'A100',
+            name: 'Cache Test',
+            breed: 'Labrador',
+            animal_type: 'Dog'
+        });
+
+        const response = await request(app)
+            .get('/api/animals');
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.performance.source)
+            .toBe('database');
+    });
+
+    test('second identical GET request retrieves data from cache', async () => {
+
+        await Animal.create({
+            animal_id: 'A101',
+            name: 'Cache Test',
+            breed: 'Poodle',
+            animal_type: 'Dog'
+        });
+
+        await request(app)
+            .get('/api/animals');
+
+        const response = await request(app)
+            .get('/api/animals');
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.performance.source)
+            .toBe('cache');
+    });
+});
+
+// *** Database Index Validation ***
+
+describe('Animal Database Indexes', () => {
+
+    test('animal collection contains rescue filter compound index', async () => {
+
+        const indexes = await Animal.collection.getIndexes();
+
+        expect(indexes)
+            .toHaveProperty('rescue_filter_index');
     });
 
 });
