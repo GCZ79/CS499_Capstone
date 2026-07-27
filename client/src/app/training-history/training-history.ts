@@ -32,26 +32,7 @@ export class TrainingHistory implements OnInit {
 
   /** Training records displayed in table */
   trainingRecords: Training[] = [];
-
-  /** Training record currently being edited */
-  editingTrainingId: string | null = null;
-
-  /** Indicates whether the form is editing an existing record */
-  editMode: boolean = false;
-
-  /** Training form data */
-  newTraining: Training = {
-    animal_id: '',
-    rescue_type: '',
-    training_status: '',
-    training_level: '',
-    trainer_id: '',
-    trainer_name: '',
-    start_date: new Date().toISOString().split('T')[0],
-    score: undefined,
-    notes: ''
-  };
-
+    
   /** Informational message */
   message: string = '';
 
@@ -203,24 +184,6 @@ export class TrainingHistory implements OnInit {
     );
   }
 
-  /**
-   * Converts MongoDB date format into HTML date input format.
-   *
-   * Example:
-   * 2026-07-26T00:00:00.000Z
-   * becomes:
-   * 2026-07-26
-   */
-  private formatDateForInput(
-    date: string | Date
-  ): string {
-
-    return new Date(date)
-      .toISOString()
-      .split('T')[0];
-
-  }
-  
   /**
    * Opens training form in edit mode.
    * Navigates to TrainingComponent with selected record ID.

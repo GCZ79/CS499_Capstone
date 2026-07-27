@@ -380,6 +380,25 @@ export class TrainingComponent implements OnInit {
   }
 
   /**
+   * Navigates to edit page for selected training record.
+   *
+   * @param id - Training record MongoDB ID
+   */
+  goToEdit(id: string | undefined): void {
+
+    if (!id) {
+      console.error('Training record has no ID');
+      return;
+    }
+
+    this.router.navigate([
+      '/admin/training/edit',
+      id
+    ]);
+
+  }
+
+  /**
    * Deletes a training record
    * Confirms deletion before removing the record
    */

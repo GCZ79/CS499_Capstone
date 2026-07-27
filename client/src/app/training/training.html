@@ -375,13 +375,13 @@
           <td class="actions">
             <button *ngIf="authService.canEdit()"
                     class="btn btn-edit"
-                    (click)="editTraining(training)">
+                    (click)="goToEdit(training._id)">
               Edit
             </button>
 
-            <button *ngIf="authService.canEdit()"
+            <button *ngIf="authService.canEdit() && training._id"
                     class="btn btn-delete"
-                    (click)="deleteTraining(training._id!)">
+                    (click)="deleteTraining(training._id)">
               Delete
             </button>
           </td>

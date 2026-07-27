@@ -8,6 +8,7 @@
 const express = require('express');
 const router = express.Router();
 const Training = require('../models/Training');
+const AuditLog = require('../models/AuditLog');
 const authenticateToken = require('../middleware/auth');
 const requireRole = require('../middleware/requireRole');
 
@@ -80,6 +81,14 @@ router.post('/',
     try {
         const training = new Training(req.body);
         const savedTraining = await training.save();
+
+        await AuditLog.create({
+            username: req.user.username,
+            role: req.user.role,
+            action: 'TRAINING_CREATE',
+            details: `Created training record for animal ${savedTraining.animal_id}`
+        });
+
         res.status(201).json(savedTraining);
 
     } catch (error) {
@@ -108,6 +117,13 @@ router.put('/:id',
             return res.status(404).json({error: 'Training record not found'});
         }
 
+        await AuditLog.create({
+            username: req.user.username,
+            role: req.user.role,
+            action: 'TRAINING_UPDATE',
+            details: `Updated training record ${updatedTraining._id}`
+        });
+
         res.status(200).json(updatedTraining);
 
     } catch (error) {
@@ -131,7 +147,16 @@ router.delete('/:id',
             return res.status(404).json({error: 'Training record not found'});
         }
 
-        res.status(200).json({message: 'Training record deleted successfully'});
+        await AuditLog.create({
+            username: req.user.username,
+            role: req.user.role,
+            action: 'TRAINING_DELETE',
+            details: `Deleted training record ${deletedTraining._id}`
+        });
+
+        res.status(200).json({
+            message: 'Training record deleted successfully'
+        });
 
     } catch (error) {
 
