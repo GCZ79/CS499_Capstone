@@ -9,9 +9,10 @@ const cors              = require('cors');
 const helmet            = require('helmet');
 const rateLimit         = require('express-rate-limit');
 const connectDB         = require('./config/db');
-const animalsRoute      = require('./routes/animals');
 const authRoutes        = require('./routes/auth');
 const adminRoutes       = require('./routes/admin');
+const animalsRoute      = require('./routes/animals');
+const trainingRoute     = require('./routes/training');
 const { validateQuery } = require('./middleware/validate');
 const app = express();
 
@@ -34,6 +35,8 @@ app.use('/api/', rateLimit({
 // Mount the animals router
 // validateQuery runs first, then the route handler
 app.use('/api/animals', validateQuery, animalsRoute);
+// Mount the training router
+app.use('/api/training', trainingRoute);
 // Health check endpoint - useful to quickly verify the server is running
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });

@@ -17,6 +17,7 @@
     Active button is highlighted with the 'active' class
   -->
   <div class="filter-bar">
+
     <span class="filter-label">Rescue type:</span>
 
     <!-- Iterate through rescueTypes array to generate filter buttons -->
@@ -29,11 +30,27 @@
 
     <span class="separator">|</span>
 
-    <!-- Add Animal button - only visible to users with edit permissions -->
+    <!--    <div class="button-break"></div> -->
+
+       <!-- Add Animal button - only visible to users with edit permissions -->
     <button *ngIf="authService.canEdit()"
             class="btn btn-create"
             (click)="addAnimal()">
       ✚ Add Animal
+    </button>
+
+    <!-- Add Training button - only visible to users with edit permissions -->
+    <button *ngIf="authService.canEdit()"
+            class="btn btn-training"
+            (click)="addTraining()">
+      🎓 Add Training
+    </button>
+
+    <!-- Training History button - opens training history page -->
+    <button *ngIf="authService.canEdit()"
+            class="btn btn-history"
+            (click)="openTrainingHistory()">
+      📜 Training History
     </button>
 
     <!-- Search toggle button -->
@@ -60,6 +77,9 @@
             (click)="logout()">
       ❌ Logout
     </button>
+
+    <span class="separator">|</span>
+
   </div>
 
   <!-- ======================================== -->
@@ -230,6 +250,13 @@
                     class="btn btn-edit"
                     (click)="editAnimal(a); $event.stopPropagation()">
               Edit
+            </button>
+
+            <!-- Train button - opens training management for this animal -->
+            <button *ngIf="authService.canEdit()"
+                    class="btn btn-training"
+                    (click)="trainAnimal(a); $event.stopPropagation()">
+              Training
             </button>
 
             <!-- Delete button - only visible to users with edit permissions -->

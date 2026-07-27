@@ -450,11 +450,37 @@ export class DashboardComponent implements OnInit {
   }
 
   /**
+   * Navigates to the training management page
+   * Allows users to create a new training record
+   */
+  addTraining(): void {
+    this.router.navigate(['/admin/training']);
+  }
+
+  /**
    * Navigates to the animal edit form
    * @param {Animal} animal - Animal record to edit
    */
   editAnimal(animal: Animal): void {
     this.router.navigate(['/animals/edit', animal._id]);
+  }
+
+  /**
+   * Opens training management page for the selected animal.
+   * Passes animal_id through query parameters so the training
+   * form can automatically associate the new training record.
+   *
+   * @param animal - Animal selected for training
+   */
+  trainAnimal(animal: Animal): void {
+    this.router.navigate(
+      ['/admin/training'],
+      {
+        queryParams: {
+          animal_id: animal.animal_id
+        }
+      }
+    );
   }
 
   /**
@@ -494,6 +520,16 @@ export class DashboardComponent implements OnInit {
           this.cdr.detectChanges();
         }
       });
+  }
+
+  /**
+ * Opens the training history page.
+ * Displays all training records unless an animal is selected.
+ */
+  openTrainingHistory(): void {
+    this.router.navigate([
+      '/training-history'
+    ]);
   }
 
   // ============================================

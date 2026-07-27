@@ -1,0 +1,391 @@
+<!--
+  training.html - Template for TrainingComponent
+  Provides a complete form for creating training records
+  Supports both standalone creation and animal dashboard navigation
+  Includes validation, dropdown selections, and training history display
+-->
+
+<div class="training-form">
+
+  <h1>
+    {{ editingTrainingId ? 'Edit Training Record' : 'Add Training Record' }}
+  </h1>
+
+  <!-- ======================================== -->
+  <!-- STATUS MESSAGES                          -->
+  <!-- ======================================== -->
+
+  <div *ngIf="successMessage"
+       class="success-message">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage"
+       class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="animalSelected"
+       class="info-message">
+    Creating training record for animal:
+    <strong>
+      {{ newTraining.animal_id }}
+    </strong>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- TRAINING FORM                           -->
+  <!-- ======================================== -->
+
+  <form #trainingForm="ngForm"
+        (ngSubmit)="addTraining()">
+
+    <!-- ======================================== -->
+    <!-- ANIMAL ID FIELD                         -->
+    <!-- ======================================== -->
+    <!--
+      Required relationship field.
+      Read-only when accessed from animal dashboard.
+      Editable when creating standalone records.
+    -->
+    <label>
+      Animal ID
+    </label>
+
+    <input [(ngModel)]="newTraining.animal_id"
+           name="animal_id"
+           #animalId="ngModel"
+           required
+           [readonly]="animalSelected">
+
+    <div class="validation-error"
+         *ngIf="animalId.invalid && animalId.touched">
+      Animal ID is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- RESCUE TYPE FIELD                       -->
+    <!-- ======================================== -->
+
+    <label>
+      Rescue Type
+    </label>
+
+    <select [(ngModel)]="newTraining.rescue_type"
+            name="rescue_type"
+            #rescueType="ngModel"
+            required>
+      <option value="">
+        -- Select Rescue Type --
+      </option>
+      <option value="Water Rescue">
+        Water Rescue
+      </option>
+      <option value="Mountain Rescue">
+        Mountain Rescue
+      </option>
+      <option value="Disaster Rescue">
+        Disaster Rescue
+      </option>
+      <option value="Individual Tracking">
+        Individual Tracking
+      </option>
+    </select>
+
+    <div class="validation-error"
+         *ngIf="rescueType.invalid && rescueType.touched">
+      Rescue type is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- TRAINING STATUS FIELD                  -->
+    <!-- ======================================== -->
+
+    <label>
+      Training Status
+    </label>
+
+    <select [(ngModel)]="newTraining.training_status"
+            name="training_status"
+            #status="ngModel"
+            required>
+      <option value="">
+        -- Select Status --
+      </option>
+      <option value="Scheduled">
+        Scheduled
+      </option>
+      <option value="In Progress">
+        In Progress
+      </option>
+      <option value="Completed">
+        Completed
+      </option>
+      <option value="Failed">
+        Failed
+      </option>
+      <option value="Cancelled">
+        Cancelled
+      </option>
+    </select>
+
+    <div class="validation-error"
+         *ngIf="status.invalid && status.touched">
+      Training status is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- TRAINING LEVEL FIELD                   -->
+    <!-- ======================================== -->
+
+    <label>
+      Training Level
+    </label>
+
+    <select [(ngModel)]="newTraining.training_level"
+            name="training_level"
+            #level="ngModel"
+            required>
+      <option value="">
+        -- Select Level --
+      </option>
+      <option value="Beginner">
+        Beginner
+      </option>
+      <option value="Intermediate">
+        Intermediate
+      </option>
+      <option value="Advanced">
+        Advanced
+      </option>
+      <option value="Expert">
+        Expert
+      </option>
+      <option value="N/A">
+        N/A
+      </option>
+    </select>
+
+    <div class="validation-error"
+         *ngIf="level.invalid && level.touched">
+      Training level is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- TRAINER ID FIELD                       -->
+    <!-- ======================================== -->
+
+    <label>
+      Trainer ID
+    </label>
+
+    <input [(ngModel)]="newTraining.trainer_id"
+           name="trainer_id"
+           #trainerId="ngModel"
+           required>
+
+    <div class="validation-error"
+         *ngIf="trainerId.invalid && trainerId.touched">
+      Trainer ID is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- TRAINER NAME FIELD                     -->
+    <!-- ======================================== -->
+
+    <label>
+      Trainer Name
+    </label>
+
+    <input [(ngModel)]="newTraining.trainer_name"
+           name="trainer_name"
+           #trainerName="ngModel"
+           required>
+
+    <div class="validation-error"
+         *ngIf="trainerName.invalid && trainerName.touched">
+      Trainer name is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- START DATE FIELD                       -->
+    <!-- ======================================== -->
+
+    <label>
+      Start Date
+    </label>
+
+    <input type="date"
+           [(ngModel)]="newTraining.start_date"
+           name="start_date"
+           required>
+
+    <!-- ======================================== -->
+    <!-- COMPLETION DATE FIELD                  -->
+    <!-- ======================================== -->
+
+    <label>
+      Completion Date
+    </label>
+
+    <input type="date"
+           [(ngModel)]="newTraining.completion_date"
+           name="completion_date">
+
+    <!-- ======================================== -->
+    <!-- SCORE FIELD                             -->
+    <!-- ======================================== -->
+    <!--
+      Optional performance score.
+      Expected range is 0-100.
+    -->
+
+    <label>
+      Training Score
+    </label>
+
+    <input type="number"
+           [(ngModel)]="newTraining.score"
+           name="score"
+           min="0"
+           max="100">
+
+    <!-- ======================================== -->
+    <!-- NOTES FIELD                             -->
+    <!-- ======================================== -->
+
+    <label>
+      Notes
+    </label>
+
+    <textarea [(ngModel)]="newTraining.notes"
+              name="notes"
+              rows="4">
+    </textarea>
+
+    <!-- ======================================== -->
+    <!-- FORM BUTTONS                            -->
+    <!-- ======================================== -->
+
+    <div class="buttons">
+
+      <button type="submit"
+              [disabled]="trainingForm.invalid">
+        {{ editingTrainingId ? 'Update' : 'Save' }}
+      </button>
+
+      <button type="button"
+              (click)="resetForm()">
+        Reset
+      </button>
+    </div>
+  </form>
+</div>
+
+  <!-- ======================================== -->
+  <!-- TRAINING HISTORY TABLE                  -->
+  <!-- ======================================== -->
+  <!--
+    Displays existing training records.
+    Provides visibility of the one-to-many relationship
+    between animals and training sessions.
+  -->
+
+  <div class="training-table">
+
+    <h2>
+      Training History
+    </h2>
+
+    <div *ngIf="trainingRecords.length === 0"
+         class="status-message">
+      No training records found.
+      <br /><br />
+    </div>
+    <div class="training-controls">
+      <button class="btn btn-refresh"
+              (click)="loadTraining()">
+        🔄 Show All Training Records
+      </button>
+      <button *ngIf="animalSelected && newTraining.animal_id"
+              class="btn btn-refresh"
+              (click)="loadAnimalTraining(newTraining.animal_id)">
+        ➡️ Show This Animal History
+      </button>
+      <button type="button"
+              (click)="goBackToHistory()">
+        ↩️ Training History
+      </button>
+    </div>
+
+    <br />
+
+    <table>
+      <thead>
+        <tr>
+          <th>
+            Animal ID
+          </th>
+          <th>
+            Rescue Type
+          </th>
+          <th>
+            Status
+          </th>
+          <th>
+            Level
+          </th>
+          <th>
+            Trainer
+          </th>
+          <th>
+            Score
+          </th>
+          <th>
+            Created
+          </th>
+          <th>
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let training of trainingRecords">
+          <td>
+            {{training.animal_id}}
+          </td>
+          <td>
+            {{training.rescue_type}}
+          </td>
+          <td>
+            {{training.training_status}}
+          </td>
+          <td>
+            {{training.training_level}}
+          </td>
+          <td>
+            {{training.trainer_name}}
+          </td>
+          <td>
+            {{training.score || '-'}}
+          </td>
+          <td>
+            {{ training.createdAt | date:'MM/dd/yyyy' }}
+          </td>
+          <td class="actions">
+            <button *ngIf="authService.canEdit()"
+                    class="btn btn-edit"
+                    (click)="editTraining(training)">
+              Edit
+            </button>
+
+            <button *ngIf="authService.canEdit()"
+                    class="btn btn-delete"
+                    (click)="deleteTraining(training._id!)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
