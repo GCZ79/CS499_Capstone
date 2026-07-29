@@ -134,7 +134,7 @@ export class TrainingHistory implements OnInit {
   loadAllHistory(): void {
 
     this.trainingService
-      .getTraining()
+      .getTrainingDetails()
       .subscribe({
 
         next: (data) => {

@@ -261,4 +261,44 @@ describe('Training API CRUD', () => {
         expect(response.statusCode)
             .toBe(200);
     });
+
+    test('joins training records with matching animal data', async () => {
+
+        const Animal = require('../models/Animal');
+
+        await Animal.create({
+            animal_id: 'A001',
+            name: 'Buddy',
+            breed: 'Labrador Mix',
+            animal_type: 'Dog'
+        });
+
+        await Training.create({
+            animal_id: 'A001',
+            rescue_type: 'Water Rescue',
+            training_status: 'Completed',
+            training_level: 'Advanced',
+            trainer_id: 'T001',
+            trainer_name: 'John Smith',
+            start_date: new Date(),
+            score: 95,
+            notes: 'Good performance'
+        });
+
+        const response = await request(app)
+            .get('/api/training')
+            .set('Authorization', `Bearer ${employeeToken}`);
+
+        expect(response.statusCode)
+            .toBe(200);
+
+        expect(response.body[0].animal_name)
+            .toBe('Buddy');
+
+        expect(response.body[0].breed)
+            .toBe('Labrador Mix');
+
+        expect(response.body[0].animal_type)
+            .toBe('Dog');
+    });
 });

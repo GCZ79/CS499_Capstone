@@ -7,6 +7,7 @@
 
 const express = require('express');
 const router = express.Router();
+const Animal = require('../models/Animal');
 const Training = require('../models/Training');
 const AuditLog = require('../models/AuditLog');
 const authenticateToken = require('../middleware/auth');
@@ -19,13 +20,53 @@ router.get('/',
     requireRole('admin', 'employee'),
     async (req, res) => {
 
-    try {
-        const records = await Training.find();
-        res.status(200).json(records);
+        try {
 
-    } catch (error) {
-        res.status(500).json({error: 'Failed to retrieve training records'});
-    }
+            const records = await Training.aggregate([
+                {
+                    $lookup: {
+                        from: 'animals',
+                        localField: 'animal_id',
+                        foreignField: 'animal_id',
+                        as: 'animal'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: '$animal',
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
+                    $project: {
+                        animal_id: 1,
+                        rescue_type: 1,
+                        training_status: 1,
+                        training_level: 1,
+                        trainer_id: 1,
+                        trainer_name: 1,
+                        start_date: 1,
+                        completion_date: 1,
+                        score: 1,
+                        notes: 1,
+                        createdAt: 1,
+
+                        animal_name: '$animal.name',
+                        breed: '$animal.breed',
+                        animal_type: '$animal.animal_type'
+                    }
+                }
+            ]);
+
+            res.status(200).json(records);
+
+        } catch (error) {
+
+            console.error(error);
+
+            res.status(500)
+                .json({ error: 'Failed to retrieve training records' });
+        }
     });
 
 // GET /api/training/id/:id
@@ -50,6 +91,63 @@ router.get('/id/:id',
 
         } catch (error) {
             res.status(400).json({error: error.message});
+        }
+    });
+
+// GET /api/training/details
+// Return training records with animal information joined
+router.get('/details',
+    authenticateToken,
+    requireRole('admin', 'employee'),
+    async (req, res) => {
+
+        try {
+            const records = await Training.aggregate([
+                {
+                    $lookup: {
+                        from: 'animals',
+                        localField: 'animal_id',
+                        foreignField: 'animal_id',
+                        as: 'animal'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: '$animal',
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
+                    $project: {
+                        animal_id: 1,
+                        rescue_type: 1,
+
+                        training_status: 1,
+                        training_level: 1,
+
+                        trainer_id: 1,
+                        trainer_name: 1,
+
+                        start_date: 1,
+                        completion_date: 1,
+                        score: 1,
+                        notes: 1,
+
+                        createdAt: 1,
+
+                        animal_name: '$animal.name',
+                        breed: '$animal.breed',
+                        animal_type: '$animal.animal_type'
+                    }
+                }
+            ]);
+
+            res.status(200).json(records);
+
+        } catch (error) {
+            res.status(500).json({
+                error: 'Failed to retrieve training details'
+            });
         }
     });
 

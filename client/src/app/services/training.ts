@@ -42,6 +42,16 @@ export class TrainingService {
   }
 
   /**
+   * Retrieves detailed training records from the server
+   * @returns Observable emitting an array of Training objects with detailed information
+   */
+  getTrainingDetails() {
+    return this.http.get<Training[]>(
+      `${this.apiUrl}/details`
+    );
+  }
+
+  /**
    * Creates a new training record
    * @param training - The training data to be created (without ID)
    * @returns Observable emitting the created Training object with server-generated ID

@@ -21,6 +21,12 @@ export interface Training {
   _id?: string;
   /** ID of the animal being trained */
   animal_id: string;
+  /*
+   * Join $lookup fields from the animals collection for display purposes.
+   */
+  animal_name?: string;
+  breed?: string;
+  animal_type?: string;
   /** Type of rescue training (e.g., Water Rescue, Mountain Rescue) */
   rescue_type: string;
   /** Current status of the training (Scheduled, In Progress, Completed, Cancelled) */
@@ -162,7 +168,7 @@ export class TrainingComponent implements OnInit {
    * Logs errors to console if the request fails
    */
   loadTraining(): void {
-    this.trainingService.getTraining()
+    this.trainingService.getTrainingDetails()
       .subscribe({
         next: (data) => {
           this.trainingRecords = data;
