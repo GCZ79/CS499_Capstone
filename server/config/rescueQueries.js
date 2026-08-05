@@ -1,4 +1,10 @@
-// Direct port of get_rescue_query() from the Python dashboard
+/**
+ * config/rescueQueries.js — MongoDB query definitions for rescue type filters
+ * Direct port of get_rescue_query() from the original Python/Dash dashboard.
+ * Each key maps to a MongoDB filter object used by the animals route.
+ * 'reset' returns an empty query which matches all documents.
+ */
+
 const rescueQueries = {
   water: {
     animal_type: 'Dog',

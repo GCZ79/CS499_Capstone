@@ -1,0 +1,250 @@
+<!--
+  animal-form.html - Template for AnimalForm component
+  Provides a complete form for creating and editing animal records
+  Features dynamic title, validation error messages, and auto-calculated age field
+-->
+
+<div *ngIf="successMessage"
+     class="success-message">
+  {{ successMessage }}
+</div>
+
+<div class="animal-form">
+  <h1>
+    {{ id ? 'Edit Animal' : 'Add Animal' }}
+  </h1>
+
+  <form #animalForm="ngForm" (ngSubmit)="save()">
+
+    <!-- ======================================== -->
+    <!-- ANIMAL ID FIELD                          -->
+    <!-- ======================================== -->
+    <label>Animal ID</label>
+    <input [(ngModel)]="animal.animal_id"
+           name="animal_id"
+           #animalId="ngModel"
+           required>
+    <div class="validation-error"
+         *ngIf="animalId.invalid && animalId.touched">
+      Animal ID is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- NAME FIELD                               -->
+    <!-- ======================================== -->
+    <label>Name</label>
+    <input [(ngModel)]="animal.name"
+           name="name"
+           #name="ngModel"
+           required>
+    <div class="validation-error"
+         *ngIf="name.invalid && name.touched">
+      Name is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- BREED FIELD                              -->
+    <!-- ======================================== -->
+    <label>Breed</label>
+    <input [(ngModel)]="animal.breed"
+           name="breed"
+           #breed="ngModel"
+           required>
+    <div class="validation-error"
+         *ngIf="breed.invalid && breed.touched">
+      Breed is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- ANIMAL TYPE FIELD (Dropdown)             -->
+    <!-- ======================================== -->
+    <label>Animal Type</label>
+    <select [(ngModel)]="animal.animal_type"
+            name="animal_type"
+            #animalType="ngModel"
+            required>
+      <option value="">-- Select Animal Type --</option>
+      <option value="Dog">Dog</option>
+      <option value="Cat">Cat</option>
+      <option value="Bird">Bird</option>
+      <option value="Livestock">Livestock</option>
+      <option value="Other">Other</option>
+    </select>
+    <div class="validation-error"
+         *ngIf="animalType.invalid && animalType.touched">
+      Animal type is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- COLOR FIELD                              -->
+    <!-- ======================================== -->
+    <label>Color</label>
+    <input [(ngModel)]="animal.color"
+           name="color"
+           #color="ngModel"
+           required>
+    <div class="validation-error"
+         *ngIf="color.invalid && color.touched">
+      Color is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- SEX UPON OUTCOME FIELD (Dropdown)       -->
+    <!-- ======================================== -->
+    <label>Sex Upon Outcome</label>
+    <select [(ngModel)]="animal.sex_upon_outcome"
+            name="sex_upon_outcome"
+            #sex="ngModel"
+            required>
+      <option value="">-- Select Sex --</option>
+      <option>Neutered Male</option>
+      <option>Intact Male</option>
+      <option>Spayed Female</option>
+      <option>Intact Female</option>
+      <option>Unknown</option>
+    </select>
+    <div class="validation-error"
+         *ngIf="sex.invalid && sex.touched">
+      Sex is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- AGE UPON OUTCOME FIELD                   -->
+    <!-- ======================================== -->
+    <label>Age Upon Outcome</label>
+    <input [(ngModel)]="animal.age_upon_outcome"
+           name="age_upon_outcome"
+           #age="ngModel"
+           required>
+    <div class="validation-error"
+         *ngIf="age.invalid && age.touched">
+      Age is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- OUTCOME TYPE FIELD (Dropdown)           -->
+    <!-- ======================================== -->
+    <label>Outcome Type</label>
+    <select [(ngModel)]="animal.outcome_type"
+            name="outcome_type"
+            #outcome="ngModel"
+            required>
+       <option value="">-- Select Outcome --</option>
+      <option>Adoption</option>
+      <option>Transfer</option>
+      <option>Return to Owner</option>
+      <option>Euthanasia</option>
+      <option>Died</option>
+      <option>Disposal</option>
+      <option>Missing</option>
+      <option>Relocate</option>
+      <option>Rto-Adopt</option>
+    </select>
+    <div class="validation-error"
+         *ngIf="outcome.invalid && outcome.touched">
+      Outcome type is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- OUTCOME SUBTYPE FIELD                    -->
+    <!-- ======================================== -->
+    <label>Outcome Subtype</label>
+    <input [(ngModel)]="animal.outcome_subtype"
+           name="outcome_subtype"
+           #subtype="ngModel"
+           required>
+    <div class="validation-error"
+         *ngIf="subtype.invalid && subtype.touched">
+      Outcome subtype is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- DATE OF BIRTH FIELD (Date picker)       -->
+    <!-- Triggers age calculation on change      -->
+    <!-- ======================================== -->
+    <label>Date of Birth</label>
+    <input type="date"
+           [(ngModel)]="animal.date_of_birth"
+           name="date_of_birth"
+           #dob="ngModel"
+           (change)="calculateAgeInWeeks()"
+           required>
+    <div class="validation-error"
+         *ngIf="dob.invalid && dob.touched">
+      Date of birth is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- OUTCOME DATE FIELD (Datetime picker)    -->
+    <!-- Triggers age calculation on change      -->
+    <!-- ======================================== -->
+    <label>Outcome Date</label>
+    <input type="datetime-local"
+           [(ngModel)]="animal.datetime"
+           name="datetime"
+           #datetime="ngModel"
+           (change)="calculateAgeInWeeks()"
+           required>
+    <div class="validation-error"
+         *ngIf="datetime.invalid && datetime.touched">
+      Outcome date is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- AGE IN WEEKS FIELD (Read-only)          -->
+    <!-- Automatically calculated from DOB and   -->
+    <!-- outcome date - not editable by user     -->
+    <!-- ======================================== -->
+    <label>Age (weeks)</label>
+    <input type="number"
+           [(ngModel)]="animal.age_upon_outcome_in_weeks"
+           name="age_upon_outcome_in_weeks"
+           readonly>
+    <!-- ======================================== -->
+    <!-- LATITUDE FIELD                          -->
+    <!-- ======================================== -->
+    <label>Latitude</label>
+    <input type="number"
+           step="any"
+    [(ngModel)]="animal.location_lat"
+    name="location_lat"
+    #lat="ngModel"
+    required>
+    <div class="validation-error"
+         *ngIf="lat.invalid && lat.touched">
+      Latitude is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- LONGITUDE FIELD                         -->
+    <!-- ======================================== -->
+    <label>Longitude</label>
+    <input type="number"
+           step="any"
+    [(ngModel)]="animal.location_long"
+    name="location_long"
+    #lng="ngModel"
+    required>
+    <div class="validation-error"
+         *ngIf="lng.invalid && lng.touched">
+      Longitude is required.
+    </div>
+
+    <!-- ======================================== -->
+    <!-- FORM BUTTONS                            -->
+    <!-- Save button disabled when form invalid  -->
+    <!-- Cancel button navigates back            -->
+    <!-- ======================================== -->
+    <div class="buttons">
+      <button type="submit"
+              [disabled]="animalForm.invalid">
+        Save
+      </button>
+
+      <button type="button"
+              (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

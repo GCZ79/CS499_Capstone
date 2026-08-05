@@ -1,0 +1,210 @@
+/**
+ * animal-form.scss - Styles for AnimalForm component
+ * Provides a user-friendly form layout for creating and editing animal records
+ * Features a light blue themed design with grid-based form layout
+ */
+
+// ============================================
+// MAIN CONTAINER
+// ============================================
+
+/**
+ * Animal form container
+ * Centered on page with max-width constraint
+ * Light blue background with rounded corners and subtle shadow
+ */
+.animal-form {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 30px;
+  text-align: right;
+  background: #ADD8E6; // Light blue background
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+// ============================================
+// FORM HEADER
+// ============================================
+
+/**
+ * Form title styling
+ * Pink/red color with uppercase text
+ * Centered with white background strip
+ */
+.animal-form h1 {
+  color: #c9134b;
+  text-transform: uppercase;
+  text-align: center;
+  width: fit-content;
+  margin: 0 auto 25px auto;
+  padding: 0 15px;
+  background: white;
+  display: block;
+}
+
+// ============================================
+// FORM LAYOUT
+// ============================================
+
+/**
+ * Form grid layout
+ * Two columns: labels (180px) and inputs (remaining space)
+ * Small gap between items for compact layout
+ */
+form {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 5px;
+  align-items: center;
+}
+
+// ============================================
+// FORM ELEMENTS
+// ============================================
+
+/**
+ * Label styling
+ * Brown/tan color with uppercase and bold text
+ */
+label {
+  color: #5a4535;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+/**
+ * Input and select field styling
+ * Full width with padding for comfortable typing
+ * Light border with subtle rounded corners
+ */
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #9c8964;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/**
+ * Focus state for inputs and selects
+ * Removes default outline and applies teal border color
+ */
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #316e66;
+}
+
+// ============================================
+// BUTTONS SECTION
+// ============================================
+
+/**
+ * Button container
+ * Spans full grid width
+ * Centered buttons with spacing between them
+ */
+.buttons {
+  grid-column: 1 / -1; // Full width of grid
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  gap: 15px;
+}
+
+/**
+ * General button styling
+ * Padding for comfortable clicking
+ * No border with rounded corners
+ */
+button {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/**
+ * Submit button (Save/Update)
+ * Brand red/pink background with white text
+ */
+button[type="submit"] {
+  background: #c9134b;
+  color: white;
+}
+
+/**
+ * Cancel button
+ * Gray background with white text
+ */
+button[type="button"] {
+  background: #777;
+  color: white;
+}
+
+/**
+ * Button hover effect
+ * Slight opacity reduction for visual feedback
+ */
+button:hover {
+  opacity: .85;
+}
+
+// ============================================
+// VALIDATION STATES
+// ============================================
+
+/**
+ * Validation error message styling
+ * Positioned in second column of grid
+ * Red color with small font size
+ */
+.validation-error {
+  grid-column: 2;
+  color: #d32f2f;
+  font-size: 0.85rem;
+  text-align: left;
+  min-height: 18px;
+  margin-top: -2px;
+  margin-bottom: 4px;
+}
+
+/**
+ * Success message styling for the AnimalForm component
+ * Displays a green success notification after successful save operations
+ * Used to confirm when animal records are created or updated
+ */
+.success-message {
+  margin: 15px auto;
+  padding: 10px;
+  border-radius: 5px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+  text-align: center;
+  max-width: fit-content;
+}
+
+/**
+ * Invalid input/select styling
+ * Applies red border when field is both invalid and touched
+ * Provides immediate visual feedback for form validation
+ */
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border: 2px solid #d32f2f;
+}
+
+/**
+ * Disabled button styling
+ * Reduced opacity with not-allowed cursor
+ * Indicates button is currently unavailable
+ */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

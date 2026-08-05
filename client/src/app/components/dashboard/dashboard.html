@@ -1,71 +1,294 @@
+<!--
+  dashboard.html - Dashboard component template for the Grazioso Salvare website
+  Provides an interactive interface for browsing, filtering, and analyzing
+  rescue animal records using tables, maps, charts, and pagination.
+-->
+
 <div class="dashboard">
 
   <hr>
 
-  <!-- State debug info (development)
-  <pre>
-    loading: {{ loading }}
-    animals: {{ animals.length }}
-    total: {{ total }}
-    error: {{ error }}
-  </pre>
+  <!-- ======================================== -->
+  <!-- FILTER BAR                              -->
+  <!-- ======================================== -->
+  <!--
+    Filter buttons - mirrors btn1/btn2/btn3/btn4 from python script
+    Allows users to filter animals by rescue type
+    Active button is highlighted with the 'active' class
   -->
-  <!-- Filter buttons - btn1/btn2/btn3/btn4 -->
   <div class="filter-bar">
+
     <span class="filter-label">Rescue type:</span>
+
+    <!-- Iterate through rescueTypes array to generate filter buttons -->
     <button *ngFor="let r of rescueTypes"
             (click)="selectRescueType(r.id)"
             [class]="'btn btn-' + r.id"
             [class.active]="rescueType === r.id">
       {{ r.label }}
     </button>
+
+    <span class="separator">|</span>
+
+    <!--    <div class="button-break"></div> -->
+
+       <!-- Add Animal button - only visible to users with edit permissions -->
+    <button *ngIf="authService.canEdit()"
+            class="btn btn-create"
+            (click)="addAnimal()">
+      ✚ Add Animal
+    </button>
+
+    <!-- Add Training button - only visible to users with edit permissions -->
+    <button *ngIf="authService.canEdit()"
+            class="btn btn-training"
+            (click)="addTraining()">
+      🎓 Add Training
+    </button>
+
+    <!-- Training History button - opens training history page -->
+    <button *ngIf="authService.canEdit()"
+            class="btn btn-history"
+            (click)="openTrainingHistory()">
+      📜 Training History
+    </button>
+
+    <!-- Search toggle button -->
+    <button class="btn btn-search"
+            (click)="toggleSearch()">
+      🔍 Search
+    </button>
+
+    <span class="separator">|</span>
+
+    <!-- Admin button - only visible to admin users -->
+    <button *ngIf="authService.isAdmin()"
+            class="btn btn-admin"
+            (click)="openAdmin()">
+      🛠️ Admin
+    </button>
+
+    <!-- Login/Logout buttons based on authentication state -->
+    <button *ngIf="!authService.isLoggedIn()"
+            (click)="login()">
+      🗝️ Login
+    </button>
+    <button *ngIf="authService.isLoggedIn()"
+            (click)="logout()">
+      ❌ Logout
+    </button>
+
+    <span class="separator">|</span>
+
+  </div>
+
+  <!-- ======================================== -->
+  <!-- LOGIN PANEL                             -->
+  <!-- ======================================== -->
+  <!--
+    Login panel - conditionally displayed when showLogin is true
+    Provides username/password fields and submit/cancel buttons
+  -->
+  <div class="login-panel"
+       *ngIf="showLogin">
+
+    <label>
+      Username
+    </label>
+
+    <input type="text"
+           [(ngModel)]="loginUsername">
+
+    <label>
+      Password
+    </label>
+
+    <input type="password"
+           [(ngModel)]="loginPassword">
+
+    <button class="btn btn-login"
+            (click)="performLogin()">
+      Submit
+    </button>
+
+    <button class="btn btn-reset"
+            (click)="showLogin=false">
+      Cancel
+    </button>
+
+    <!-- Login error message - displayed when authentication fails -->
+    <span class="login-error"
+          *ngIf="loginError">
+      {{loginError}}
+    </span>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- SEARCH PANEL                            -->
+  <!-- ======================================== -->
+  <!--
+    Search panel - conditionally displayed when showSearch is true
+    Provides search filters for filtering animal records
+  -->
+  <div class="search-panel"
+       *ngIf="showSearch">
+
+    <label>
+      Animal ID
+    </label>
+
+    <input [(ngModel)]="searchFilters.animal_id">
+
+    <label>
+      Name
+    </label>
+
+    <input [(ngModel)]="searchFilters.name">
+
+    <label>
+      Breed
+    </label>
+
+    <input [(ngModel)]="searchFilters.breed">
+
+    <label>
+      Animal Type
+    </label>
+
+    <select [(ngModel)]="searchFilters.animal_type">
+
+      <option value="">
+        All
+      </option>
+
+      <option value="Dog">
+        Dog
+      </option>
+
+      <option value="Cat">
+        Cat
+      </option>
+
+      <option value="Bird">
+        Bird
+      </option>
+
+    </select>
+
+    <button class="btn btn-search"
+            (click)="searchAnimals()">
+      Search
+    </button>
+    <button class="btn btn-reset"
+            (click)="clearSearch()">
+      Clear
+    </button>
   </div>
 
   <hr>
 
-  <!-- Loading state -->
+  <!-- ======================================== -->
+  <!-- STATUS MESSAGES                         -->
+  <!-- ======================================== -->
+  <!-- Loading state - displayed when data is being fetched -->
   <div *ngIf="loading" class="status-message">
     Loading...
   </div>
 
-  <!-- Error state -->
+  <!-- Error state - displayed when data fetching fails -->
   <div *ngIf="error" class="error-message">
     {{ error }}
   </div>
 
-  <!-- Results summary -->
+  <!-- Success Message - displayed after successful CRUD operations -->
+  <div *ngIf="successMessage"
+       class="success-message">
+    {{ successMessage }}
+  </div>
+
+  <!--
+    Results summary - shows count of displayed vs total animals
+    Only visible when not loading and no error
+  -->
   <div *ngIf="!loading && !error" class="results-summary">
     Showing {{ animals.length }} of {{ total }} animals
   </div>
 
-  <!-- Data table -->
+  <!-- ======================================== -->
+  <!-- DATA TABLE                              -->
+  <!-- ======================================== -->
+  <!--
+    Data table - displays animal records in a scrollable wrapper
+    Only shown when data is loaded and there are animals to display
+    Rows are clickable to select an animal for map/chart updates
+  -->
   <div *ngIf="!loading && (animals.length || 0) > 0" class="table-wrapper">
-    <table>
+    <table aria-label="Animal records table">
       <thead>
         <tr>
+          <!-- Dynamically generate table headers from visibleColumns -->
           <th *ngFor="let col of visibleColumns">{{ col.label }}</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
+        <!-- Iterate through animals array to display each record -->
         <tr *ngFor="let a of animals"
             (click)="selectAnimal(a)"
-            [class.selected]="selectedAnimal?._id === a._id"
-            style="cursor: pointer;">
+            [class.selected]="selectedAnimal?._id === a._id">
+
+          <!-- Dynamically generate table cells based on visible columns -->
           <td *ngFor="let col of visibleColumns">
             {{ a[col.key] || '-' }}
+          </td>
+
+          <!-- Action buttons for each row -->
+          <td class="actions">
+
+            <!-- Edit button - only visible to users with edit permissions -->
+            <button *ngIf="authService.canEdit()"
+                    class="btn btn-edit"
+                    (click)="editAnimal(a); $event.stopPropagation()">
+              Edit
+            </button>
+
+            <!-- Train button - opens training management for this animal -->
+            <button *ngIf="authService.canEdit()"
+                    class="btn btn-training"
+                    (click)="trainAnimal(a); $event.stopPropagation()">
+              Training
+            </button>
+
+            <!-- Delete button - only visible to users with edit permissions -->
+            <button *ngIf="authService.canEdit()"
+                    class="btn btn-delete"
+                    (click)="deleteAnimal(a._id); $event.stopPropagation()">
+              Delete
+            </button>
+
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- No results -->
+  <!-- No results message - displayed when no animals match the current filter -->
   <div *ngIf="!loading && !error && (animals.length || 0) === 0" class="status-message">
     No animals match this filter.
   </div>
 
-  <!-- Pagination -->
-  <div *ngIf="!loading && (total || 0) > pageSize" class="pagination">
+  <!-- ======================================== -->
+  <!-- PAGINATION CONTROLS                     -->
+  <!-- ======================================== -->
+  <!--
+    Pagination controls - only shown when there are more records than pageSize
+    Previous button disabled on first page
+    Next button disabled on last page
+    Shows current page and total pages
+  -->
+  <div *ngIf="!loading && (total || 0) > pageSize"
+       class="pagination"
+       aria-label="Pagination controls">
     <button (click)="changePage(currentPage - 1)"
             [disabled]="currentPage === 0">
       Previous
@@ -81,16 +304,27 @@
 
   <hr>
 
-  <!-- Map and Chart -->
+  <!-- ======================================== -->
+  <!-- MAP & CHART SECTION                     -->
+  <!-- ======================================== -->
+  <!--
+    Map & Chart section - collapsed by default
+    Uses HTML5 details/summary for expandable content
+    Shows map and chart side by side when expanded
+  -->
   <details class="map-chart-details">
-    <summary>🗺️ Map & Chart</summary>
+    <summary aria-label="Map and Chart section">
+      🗺️ Map & Chart
+    </summary>
     <div class="map-chart-row">
       <div class="map-col">
+        <!-- Map component - displays animal locations -->
         <app-map [animals]="animals"
                  [selectedAnimal]="selectedAnimal">
         </app-map>
       </div>
       <div class="chart-col">
+        <!-- Chart component - displays breed distribution -->
         <app-chart [breedData]="breedData"
                    [rescueType]="rescueType">
         </app-chart>
@@ -100,10 +334,20 @@
 
   <hr>
 
-  <!-- Column Visibility -->
+  <!-- ======================================== -->
+  <!-- COLUMN VISIBILITY CONTROLS              -->
+  <!-- ======================================== -->
+  <!--
+    Column Visibility - collapsed by default
+    Allows users to toggle which columns appear in the table
+    Changes persist via component state
+  -->
   <details class="col-visibility">
-    <summary>📦 Column Visibility</summary>
+    <summary aria-label="Column Visibility section">
+      📦 Column Visibility
+    </summary>
     <div class="col-checklist">
+      <!-- Generate checkbox for each available column -->
       <label *ngFor="let col of allColumns">
         <input type="checkbox"
                [checked]="isVisible(col.key)"

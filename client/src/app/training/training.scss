@@ -1,0 +1,247 @@
+/*
+  training.scss - Styles for TrainingComponent
+
+  Provides a consistent layout with the AnimalForm component.
+  Uses a two-column grid layout, validation feedback,
+  and a training history table.
+*/
+
+// ============================================
+// MAIN CONTAINER
+// ============================================
+
+.training-form {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 30px;
+  text-align: right;
+  background: #ADD8E6;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.training-form h1 {
+  color: #c9134b;
+  text-transform: uppercase;
+  text-align: center;
+  width: fit-content;
+  margin: 0 auto 25px auto;
+  padding: 0 15px;
+  background: white;
+}
+
+// ============================================
+// FORM GRID
+// ============================================
+
+form {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 5px;
+  align-items: center;
+}
+
+// ============================================
+// LABELS
+// ============================================
+
+label {
+  color: #5a4535;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+// ============================================
+// INPUTS
+// ============================================
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #9c8964;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #316e66;
+}
+
+// ============================================
+// CRUD ACTION BUTTONS
+// ============================================
+
+.actions {
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button {
+  padding: 6px 12px;
+  height: 38px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &.active {
+    font-weight: bold;
+    border-color: #c9134b;
+    border-width: 3px;
+  }
+}
+
+.btn-edit {
+  background-color: #6495ED;
+  color: white;
+}
+
+.btn-training {
+  background: #388e3c;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #c9134b;
+  color: white;
+}
+
+.btn-edit:hover {
+  opacity: 0.85;
+}
+
+.btn-training:hover {
+  opacity: 0.85;
+}
+
+.btn-delete:hover {
+  opacity: 0.85;
+}
+
+.buttons,
+.actions,
+.training-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+// ============================================
+// VALIDATION
+// ============================================
+
+.validation-error {
+  grid-column: 2;
+  color: #d32f2f;
+  font-size: .85rem;
+  text-align: left;
+}
+
+// ============================================
+// INFO MESSAGE
+// ============================================
+
+.info-message {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  text-align: center;
+}
+
+// ============================================
+// TRAINING TABLE
+// ============================================
+
+.training-table {
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+.training-table h2 {
+  text-align: center;
+  color: #c9134b;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #f5f5f5;
+  color: #000;
+  padding: 10px;
+}
+
+td {
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+}
+
+tr:hover {
+  background: #f1f1f1;
+}
+
+// ============================================
+// STATUS MESSAGES
+// ============================================
+
+.info-message,
+.success-message,
+.error-message {
+  grid-column: 1 / -1;
+  width: fit-content;
+  box-sizing: border-box;
+  margin: 15px auto;
+  padding: 12px;
+  text-align: center;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.info-message {
+  padding: 10px;
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  color: #163b75;
+}
+
+.success-message {
+  padding: 10px;
+  border-radius: 5px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+}
+
+.error-message {
+  padding: 10px;
+  border-radius: 5px;
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}

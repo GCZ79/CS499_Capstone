@@ -16,6 +16,10 @@ This repository documents the progression of the project throughout the capstone
 | **feature/mean_stack_migration** | Improved architecture, documentation, and testing following the code review |
 | **feature/enh_sw_design-engineering** | Software Design and Engineering enhancement including authentication, authorization, administration, security, and additional testing |
 
+| **feature/enh_algorithms-data_st** | Algorithms & Data Structures enhancement including aggregation pipelines, compound indexes, server-side pagination, LRU cache, and additional testing |
+| **feature/enh_databases** | Database enhancement including JSON schema validation, RBAC access control, One-to-many model, $lookup joins, and additional testing |
+
+
 The original CS340 artifact is available at:
 
 **Dashboard-for-MongoDB**  

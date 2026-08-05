@@ -1,0 +1,203 @@
+/**
+ * admin.scss - Styles for the AdminComponent
+ * Provides styling for the administrative interface including:
+ * - Backup management (list, table, selection)
+ * - Audit log display
+ * - Pagination controls and general layout
+ */
+
+// ============================================
+// HEADER AND SECTION DIVIDERS
+// ============================================
+
+/**
+ * Main admin container
+ * Centers content with max-width constraint
+ * Provides consistent padding and spacing
+ */
+.admin-container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 5px;
+}
+
+/**
+ * Section header styling
+ * Adds spacing below main headings
+ */
+h1 {
+  margin: 0 auto;
+  text-align: center;
+  background-color: #d7ebff;
+}
+
+/**
+ * Horizontal rule as section divider
+ * Uses brand red color for visual consistency
+ * Acts as a visual separator between sections
+ */
+hr {
+  border: none;              // Remove default border
+  height: 2px;               // Thin line
+  background-color: #c9134b; // Brand red/pink color
+  margin: 0.2rem 0;          // Minimal vertical spacing
+}
+
+/**
+ * General button styling
+ * Adds consistent spacing around buttons throughout the admin interface
+ */
+button {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+.btn-download {
+  padding: 4px 10px;
+  font-size: 0.9rem;
+}
+
+// ============================================
+// BACKUP LIST (Legacy/Alternative view)
+// ============================================
+
+/**
+ * Container for backup list
+ * Bordered with rounded corners and scrollable height
+ * Used for displaying available backup files in a list format
+ */
+.backup-list {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  max-height: 180px; // Fixed height with scroll for many items
+  overflow-y: auto;  // Vertical scroll when content exceeds height
+  margin: 15px 0;    // Vertical spacing
+}
+
+/**
+ * Individual backup item in the list
+ * Clickable with flex layout for alignment
+ * Includes radio button and filename
+ */
+.backup-item {
+  padding: 8px 12px;
+  cursor: pointer; // Indicates clickable behavior
+  display: flex;
+  align-items: center;
+  gap: 10px; // Space between radio button and text
+}
+
+/**
+ * Hover effect for backup items
+ * Light gray background for visual feedback
+ */
+.backup-item:hover {
+  background: #f3f3f3;
+}
+
+/**
+ * Radio input within backup items
+ * Prevents user from directly interacting with the radio button
+ * Selection is controlled by row click instead
+ */
+.backup-item input {
+  pointer-events: none; // Disables radio button interaction
+}
+
+// ============================================
+// BACKUP TABLE (Primary view)
+// ============================================
+
+/**
+ * Backup table container
+ * Full width with collapsed borders
+ */
+.backup-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+/**
+ * Table header cells
+ * Left-aligned with padding and light gray background
+ */
+.backup-table th {
+  text-align: left;
+  padding: 8px;
+  background: #ececec;
+}
+
+/**
+ * Table data cells
+ * Padding with top border for separation
+ */
+.backup-table td {
+  padding: 8px;
+  border-top: 1px solid #ddd;
+}
+
+/**
+ * Table rows are clickable
+ * Enables row-level selection
+ */
+.backup-table tbody tr {
+  cursor: pointer;
+}
+
+/**
+ * Row hover effect
+ * Light gray background for better UX
+ */
+.backup-table tbody tr:hover {
+  background: #f7f7f7;
+}
+
+/**
+ * Selected row styling
+ * Light blue background to indicate currently selected backup
+ */
+.backup-table .selected {
+  background: #d7ebff;
+}
+
+// ============================================
+// AUDIT LOG TABLE
+// ============================================
+
+/**
+ * Audit log table container
+ * Full width with collapsed borders
+ */
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+/**
+ * Audit table header cells
+ * Left-aligned with padding and light gray background
+ */
+.audit-table th {
+  text-align: left;
+  padding: 10px;
+  background: #eeeeee;
+}
+
+/**
+ * Audit table data cells
+ * Padding with top border for separation
+ */
+.audit-table td {
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/**
+ * Row hover effect for audit logs
+ * Light gray background for better readability
+ */
+.audit-table tr:hover {
+  background: #f5f5f5;
+}

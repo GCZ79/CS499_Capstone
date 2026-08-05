@@ -1,3 +1,14 @@
+/**
+ * header.scss - Styles for HeaderComponent
+ * Defines the styling for the main navigation header
+ * Features a responsive layout with logo, navigation links, and support button
+ * Uses flexbox for alignment and spacing
+ */
+
+// ============================================
+// HEADER INNER CONTAINER
+// ============================================
+
 .header-inner {
   max-width: 1500px;
   width: 100%;
@@ -8,6 +19,10 @@
   gap: 20px;
 }
 
+// ============================================
+// LOGO AREA
+// ============================================
+
 .logo-area {
   display: flex;
   align-items: center;
@@ -15,6 +30,10 @@
   white-space: nowrap;
   flex-shrink: 0;
 }
+
+// ============================================
+// NAVIGATION AREA
+// ============================================
 
 .nav-area {
   display: flex;
@@ -35,6 +54,10 @@
   color: #c9134b;
   margin: 0;
 }
+
+// ============================================
+// NAVIGATION LINKS
+// ============================================
 
 .nav-links {
   display: flex;
@@ -67,6 +90,10 @@
   border-color: #c9134b;
 }
 
+// ============================================
+// SUPPORT BUTTON
+// ============================================
+
 .support-btn {
   display: inline-flex;
   flex-shrink: 0;
@@ -82,6 +109,10 @@
   text-decoration: none;
   color: black;
 }
+
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
 
 @media (max-width: 768px) {
   .header-inner {

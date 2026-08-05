@@ -1,6 +1,21 @@
+/**
+ * footer.scss - Styles for FooterComponent
+ * Defines the styling for the footer section
+ * Provides consistent branding with brand-colored top border
+ * Centers content with max-width constraint
+ */
+
+// ============================================
+// FOOTER CONTAINER
+// ============================================
+
 .footer {
   width: 100%;
 }
+
+// ============================================
+// FOOTER INNER CONTENT
+// ============================================
 
 .footer-inner {
   max-width: 1500px;

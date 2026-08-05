@@ -1,59 +1,74 @@
-# Client
+# Grazioso Salvare Dashboard - Client
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.16.
+## Overview
 
-## Development server
+This project is the Angular frontend for the Grazioso Salvare Animal Rescue Dashboard. Originally developed from the CS340 Dashboard for MongoDB artifact, it was enhanced during the CS499 Capstone into a modern Angular application that communicates with a RESTful Express API. The application provides animal search, CRUD operations, authentication, administrative tools, and interactive data visualization.
 
-To start a local development server, run:
+## Technologies
+
+* Angular 21
+* TypeScript
+* RxJS
+* SCSS
+* Chart.js
+* Leaflet
+* JWT Authentication
+
+## Features
+
+* Animal search and filtering
+* Rescue type filtering
+* Interactive map visualization
+* Breed distribution chart
+* Create, edit, and delete animal records
+* User authentication and role-based authorization
+* Administrative dashboard
+* Database backup and restore
+* Audit log viewer
+* Dynamic pagination
+
+## Development Server
+
+Install project dependencies:
+
+```bash
+npm install
+```
+
+Start the Angular development server:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Once the server is running, open your browser and navigate to:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```text
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
+The application will automatically reload whenever source files are modified.
 
 ## Building
 
-To build the project run:
+To build the project for production, run:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The compiled application will be generated in the `dist/` directory.
 
-## Running unit tests
+## Running Unit Tests
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+To execute the unit tests with the Vitest test runner, run:
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
 ## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+For more information about Angular CLI, including available commands and features, visit the Angular CLI documentation:
+
+https://angular.dev/tools/cli

@@ -1,3 +1,9 @@
+/**
+ * config/db.js — MongoDB connection
+ * Called once at startup. Exits the process if the connection fails
+ * to prevent the server from running without a database.
+ */
+
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
@@ -6,7 +12,7 @@ const connectDB = async () => {
     console.log('MongoDB connected');
   } catch (err) {
     console.error('MongoDB connection error:', err.message);
-    process.exit(1);
+    process.exit(1); // no point running without a database
   }
 };
 

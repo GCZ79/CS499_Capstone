@@ -1,23 +1,37 @@
+<!--
+  home.html - Homepage component template for the Grazioso Salvare website
+  Landing page featuring hero section, mission statement, and training program
+  cards. Uses Angular routing for navigation between pages.
+-->
+<!-- ======================================== -->
+<!-- HERO SECTION                            -->
+<!-- ======================================== -->
+
 <section class="hero page-grid">
   <div class="content hero-overlay">
     <div class="hero-text">
+
       <h1>SAVING LIVES.<br>TOGETHER.</h1>
 
       <p>
         We rescue, train, and deploy exceptional dogs<br>
         for water, disaster, and mountain missions.
       </p>
-
     </div>
   </div>
 </section>
 
-<div class="wave-divider"></div>
+<!-- ======================================== -->
+<!-- MISSION & PROGRAMS SECTION              -->
+<!-- ======================================== -->
 
 <section class="mission-programs page-grid">
   <div class="content mission-layout">
-    <div class="mission" routerLink="/about">
 
+    <!-- ======================================== -->
+    <!-- MISSION BOX                             -->
+    <!-- ======================================== -->
+    <div class="mission" routerLink="/about">
       <h2>Our Mission</h2>
 
       <p>
@@ -31,31 +45,34 @@
         we prepare our dogs to save lives in some of
         the world's most challenging environments.
       </p>
-
     </div>
 
-    <div class="training">
+    <!-- ======================================== -->
+    <!-- TRAINING PROGRAMS                       -->
+    <!-- ======================================== -->
 
+    <div class="training">
       <h2>Our Training Programs</h2>
 
+      <!-- Three-column cards grid -->
       <div class="cards">
 
+        <!-- Water Rescue Card -->
         <div class="card water"
              [routerLink]="['/training']"
              fragment="water">
           <h3>Water Rescue</h3>
-
           <p>
             Training for swift water, floods,<br />
             and aquatic search operations.
           </p>
         </div>
 
+        <!-- Disaster Response Card -->
         <div class="card disaster"
              [routerLink]="['/training']"
              fragment="disaster">
           <h3>Disaster Response</h3>
-
           <p>
             Preparing for earthquakes,<br />
             collapsed structures,<br />
@@ -63,11 +80,11 @@
           </p>
         </div>
 
+        <!-- Mountain Rescue Card -->
         <div class="card mountain"
              [routerLink]="['/training']"
              fragment="mountain">
           <h3>Mountain Rescue</h3>
-
           <p>
             Training for rugged terrain,<br />
             avalanche searches,<br />

@@ -1,4 +1,10 @@
-<div class="training-section">
+<!--
+  training.html - Training page component template
+  Displays detailed training program information for water, disaster, and mountain rescue.
+  Sections are anchor-targetable via URL fragments (#water, #disaster, #mountain).
+-->
+
+<div class="training-section" aria-label="Training programs">
 
   <div class="training-content">
 
@@ -26,12 +32,10 @@
       </div>
     </div>
 
+    <hr>
+
     <!-- DISASTER -->
     <div id="disaster" class="program">
-      <div class="program-image">
-        <img src="assets/images/disaster_dog.png" alt="Disaster Rescue Dog">
-      </div>
-
       <div class="program-text">
         <h3>Disaster Rescue Training</h3>
         <p>Urban search-and-rescue in collapsed structures.</p>
@@ -41,7 +45,13 @@
           <li><b>Focus:</b> Rubble search, scent detection</li>
         </ul>
       </div>
+
+      <div class="program-image">
+        <img src="assets/images/disaster_dog.png" alt="Disaster Rescue Dog">
+      </div>
     </div>
+
+    <hr>
 
     <!-- MOUNTAIN -->
     <div id="mountain" class="program">

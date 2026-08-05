@@ -1,0 +1,232 @@
+<!--
+  training-history.html - Training history component template for the Grazioso Salvare website
+  Provides a read-only interface for displaying training records associated
+  with a selected animal using a dashboard-style data table.
+-->
+
+<div class="training-history">
+
+  <hr>
+
+  <!-- ======================================== -->
+  <!-- HEADER SECTION                          -->
+  <!-- ======================================== -->
+  <!--
+    Page header - displays the title and selected animal information
+    Shows the animal ID passed through query parameters
+  -->
+  <h1>
+    Training History
+  </h1>
+
+  <hr>
+
+  <!-- ======================================== -->
+  <!-- HISTORY FILTER CONTROLS                 -->
+  <!-- ======================================== -->
+
+  <div class="history-controls">
+
+    <!-- Show all training records -->
+    <button class="btn btn-refresh"
+            *ngIf="animalId"
+            (click)="showAllTraining()">
+
+      🔄 Show All Training Records
+
+    </button>
+
+  </div>
+
+  <!-- Selected animal information -->
+  <div class="info-message"
+       *ngIf="animalId">
+
+    Showing training records for animal:
+    <strong>
+      {{ animalId }}
+    </strong>
+
+  </div>
+
+
+  <!-- ======================================== -->
+  <!-- STATUS MESSAGES                         -->
+  <!-- ======================================== -->
+  <!--
+    Status messages - displays errors or informational messages
+    Used when loading fails or no records are available
+  -->
+  <!-- Error message displayed when API request fails -->
+  <div class="error-message"
+       *ngIf="errorMessage">
+
+    {{ errorMessage }}
+
+  </div>
+
+
+  <!-- Informational message displayed when no records exist -->
+  <div class="status-message"
+       *ngIf="message">
+
+    {{ message }}
+
+  </div>
+
+
+  <!-- ======================================== -->
+  <!-- TRAINING HISTORY TABLE                  -->
+  <!-- ======================================== -->
+  <!--
+    Training history table - displays all training sessions
+    associated with the selected animal.
+    Uses dashboard-style table formatting with hover effects.
+  -->
+
+  <div class="table-wrapper"
+       *ngIf="trainingRecords.length > 0">
+
+    <table aria-label="Training history table">
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Animal ID
+          </th>
+
+          <th>
+            Rescue Type
+          </th>
+
+          <th>
+            Status
+          </th>
+
+          <th>
+            Level
+          </th>
+
+          <th>
+            Trainer
+          </th>
+
+          <th>
+            Start Date
+          </th>
+
+          <th>
+            Completion Date
+          </th>
+
+          <th>
+            Score
+          </th>
+
+          <th>
+            Created Date
+          </th>
+
+          <th>
+            Notes
+          </th>
+
+          <th>
+            Actions
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        <!-- Iterate through training records returned from API -->
+        <tr *ngFor="let training of trainingRecords">
+
+          <td>
+            {{ training.animal_id }}
+            <br>
+            <small>
+              {{training.animal_name}} -
+              {{training.breed}}
+            </small>
+            <br>
+            <span>
+              {{training.animal_type}}
+            </span>
+
+          </td>
+
+          <td>
+            {{ training.rescue_type }}
+          </td>
+
+          <td>
+            {{ training.training_status }}
+          </td>
+
+          <td>
+            {{ training.training_level }}
+          </td>
+
+          <td>
+            {{ training.trainer_name }}
+          </td>
+
+          <td>
+            {{ training.start_date | date:'MM/dd/yyyy' }}
+          </td>
+
+          <td>
+
+            {{
+              training.completion_date
+                ? (training.completion_date | date:'MM/dd/yyyy')
+                : '-'
+            }}
+
+          </td>
+
+          <td>
+            {{ training.score ?? '-' }}
+          </td>
+
+          <td>
+            {{ training.createdAt | date:'MM/dd/yyyy' }}
+          </td>
+
+          <td>
+            {{ training.notes || '-' }}
+          </td>
+
+          <td class="actions">
+
+            <!-- Edit training record -->
+            <button class="btn btn-edit"
+                    (click)="editTraining(training)">
+              Edit
+            </button>
+
+            <!-- Delete training record -->
+            <button *ngIf="training._id"
+                    class="btn btn-delete"
+                    (click)="deleteTraining(training._id)">
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+</div>

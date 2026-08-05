@@ -21,3 +21,8 @@ aac_export.json
 
 # One-time utility scripts
 import.js
+
+# Local Folders and files
+"- files/"
+server/seed.js
+*.zip

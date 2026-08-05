@@ -1,3 +1,9 @@
+/**
+ * middleware/validate.js - Input validation for animal query parameters
+ * Runs before route handlers to reject malformed requests at the API boundary.
+ * Prevents invalid values from reaching the database layer.
+ */
+
 const validateQuery = (req, res, next) => {
   const { rescueType, page, pageSize } = req.query;
 

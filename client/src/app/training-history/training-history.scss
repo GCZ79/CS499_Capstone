@@ -1,0 +1,127 @@
+/**
+ * training-history.scss - Styles for TrainingHistory component
+ * Provides a compact read-only training history table.
+ * Uses dashboard-style spacing, colors, and table formatting.
+ */
+
+// ============================================
+// MAIN CONTAINER
+// ============================================
+
+.training-history {
+  font-family: Arial, sans-serif;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 5px;
+}
+
+// ============================================
+// HEADER SECTION
+// ============================================
+
+h1 {
+  margin: 0 auto;
+  text-align: center;
+  background-color: #d7ebff;
+}
+
+// ============================================
+// HORIZONTAL DIVIDER
+// ============================================
+
+hr {
+  border: none;
+  height: 2px;
+  background-color: #c9134b;
+  margin: 0.2rem 0;
+}
+
+// ============================================
+// INFORMATION MESSAGES
+// ============================================
+
+.info-message,
+.status-message,
+.error-message {
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.info-message {
+  background: #d9f7ff;
+  border-radius: 5px;
+}
+
+.status-message {
+  color: #666;
+}
+
+.error-message {
+  color: red;
+}
+
+// ============================================
+// DATA TABLE
+// ============================================
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.8rem;
+  }
+
+  th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+
+  tr:hover {
+    background-color: #f9f9f9;
+  }
+}
+
+// ============================================
+// CRUD ACTION BUTTONS
+// ============================================
+
+.actions {
+  white-space: nowrap;
+}
+
+.actions button {
+  margin-right: 5px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btn-edit {
+  background-color: #6495ED;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #c9134b;
+  color: white;
+}
+
+.btn-edit:hover {
+  opacity: 0.85;
+}
+
+.btn-delete:hover {
+  opacity: 0.85;
+}
